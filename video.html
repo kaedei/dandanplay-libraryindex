@@ -1,57 +1,41 @@
-<!--by.kansa edit html-->
+﻿<!DOCTYPE html>
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>弹弹play媒体库</title>
-    <link rel="stylesheet" href="css/DPlayer.min.css">
-    <script src="js/DPlayer.min.js"></script>
-    <script src="js/flv.min.js"></script>
-    <script src="js/hls.min.js"></script>
-	
+    <title>@Model.AnimeTitle - @Model.EpisodeTitle</title>
+    <link rel="stylesheet" href="/css/DPlayer.min.css">
+    <script src="/js/DPlayer.min.js"></script>
+    <script src="/js/flv.min.js"></script>
+    <script src="/js/hls.min.js"></script>
 </head>
 <body>
-	
-	<h1 style="text-align:center;color: #35D6FF">弹弹play媒体库</h1>
-		
-<div id="dplayer"></div>
-<script>
-    var dp = new DPlayer({
-        container: document.getElementById('dplayer'),
-        theme: '#FADFA3',   //控件的颜色
-        loop: true,           //循环
-        screenshot: true,          //截图
-        hotkey: true,                  //热键
-		preload: 'auto',          //预加载
-        //logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
-        volume: 0.7,               //默认音量
-		mutex: true,                 //互斥，阻止多个播放器同时播放
-       video: {
-        url: '@Model.Video',
-        pic: '@Current.Hash',
-        type: 'auto'
-    },
-		 subtitle: {            //外挂字幕
-        url: 'dplayer.vtt',     //字幕地址
-        type: 'webvtt',         //字幕类型，可选值: 'webvtt', 'ass'，目前只支持 webvtt
-        fontSize: '25px',       //	字幕字号
-        bottom: '10%',          //字幕距离播放器底部的距离，取值形如: '10px' '10%'
-        color: '#b7daff'        //字幕颜色
-    },
-        danmaku: {
-        id: 'demo',         //弹幕库id
-        api: '',          //弹幕库api
-        token: 'tokendemo', //弹幕库token
-        maximum: 1000,   //同时弹幕最大上限
-        addition: [''],  //外挂弹幕地址
-        user: 'kansa',       //用户名
-        bottom: '15%',        //底部距离
-        unlimited: true        //无限制
-    },
-    });
-</script>
+    <div id="dplayer"></div>
+    <script>
+        var dp = new DPlayer({
+            container: document.getElementById('dplayer'),
+            theme: '#FADFA3',   //控件的颜色
+            loop: true,           //循环
+            screenshot: true,          //截图
+            hotkey: true,                  //热键
+            preload: 'auto',          //预加载
+            //logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
+            volume: 1,               //默认音量
+            mutex: true,                 //互斥，阻止多个播放器同时播放
+            video: {
+                url: '@Model.Video',
+                pic: '@Model.Image',
+                type: 'auto'
+            },
+            danmaku: {
+                id: '@Model.Hash',         //弹幕库id
+                api: '/dplayer/',          //弹幕库api
+                bottom: '15%',        //底部距离
+                unlimited: true        //无限制
+            }
+        });
+    </script>
 
 </body>
 </html>
