@@ -9,14 +9,23 @@
     <script src="/js/DPlayer.min.js"></script>
     <script src="/js/flv.min.js"></script>
     <script src="/js/hls.min.js"></script>
+    <style type="text/css">
+        div.dplayer {
+            position: absolute;
+            height: 90%;
+            width: 90%;
+            left: 5%;
+            top: 5%;
+        }
+    </style>
 </head>
 <body>
     <div id="dplayer"></div>
     <script>
         var dp = new DPlayer({
             container: document.getElementById('dplayer'),
-            theme: '#FADFA3',   //控件的颜色
-            loop: true,           //循环
+            theme: '@Model.Color',   //控件的颜色
+            loop: false,           //循环
             screenshot: true,          //截图
             hotkey: true,                  //热键
             preload: 'auto',          //预加载
