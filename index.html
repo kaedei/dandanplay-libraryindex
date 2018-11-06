@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,12 +8,12 @@
 	<title>弹弹play媒体库</title>
 	<!-- Bootstrap -->
 	<link href="css/bootstrap-4.0.0.css" rel="stylesheet">
-	<style>body { background: #aaa }
+	<style>
+		body { background: #aaa }
 	</style>
 </head>
 <body>
 <div style="background-image: url(css/background.png); z-index: -2; background-size: cover; background-attachment: fixed; background-position: center; background-repeat: no-repeat;">
-
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="http://www.dandanplay.com" target="_blank">弹弹PLAY</a>
@@ -23,7 +23,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="/index.html">Home </a>
+						<a class="nav-link" href="/index.html">首页</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="http://www.dandanplay.com" target="_blank">关于弹弹play</a>
@@ -35,7 +35,7 @@
 				</ul>
 				<form class="form-inline my-2 my-lg-0" method="POST" action="/index.html">
 					<input class="form-control mr-sm-2" type="text" name="q" placeholder="在这里搜索哦ο(=•ω＜=)ρ⌒☆..." data-form-field="seach" required="" aria-label="Search">
-					<button href="" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
 				</form>
 			</div>
 		</div>
@@ -52,19 +52,18 @@
 		</div>
 	</div>
 
-
 	<div class="container">
 		<div class="row text-center">
 			<div class="col-md-12 pb-1 pb-md-0">
 				<div class="card">
 					<div class="card-body">
 						<h5 class="card-title">
-							<H3>本页列表</H3><br/>
+							<H3>本页列表</H3>
 							<script type="text/javascript">
 								function unique(arr) {
 									var tmp = new Array();
 									for (var i in arr) {
-										if (tmp.indexOf(arr[i]) == -1) {
+										if (tmp.indexOf(arr[i]) === -1) {
 											tmp.push(arr[i]);
 										}
 									}
