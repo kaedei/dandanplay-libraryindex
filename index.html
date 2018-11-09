@@ -9,11 +9,20 @@
 	<!-- Bootstrap -->
 	<link href="css/bootstrap-4.0.0.css" rel="stylesheet">
 	<style>
-		body { background: #aaa }
+		body { background-image: url(css/background.png);background-attachment: fixed; background-position: center; background-repeat: no-repeat;background-size: cover}
+		 .footer {
+            position: fixed;
+            left: 0px;
+            bottom: 0px;
+            width: 100%;
+            height: 50px;
+            z-index: 9;}
+
+
 	</style>
 </head>
 <body>
-<div style="background-image: url(css/background.png); z-index: -2; background-size: cover; background-attachment: fixed; background-position: center; background-repeat: no-repeat;">
+<!--<div style="background-image: url(css/background.png); z-index: -2; background-size: cover; background-attachment: fixed; background-position: center; background-repeat: no-repeat;">-->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
 			<a class="navbar-brand" href="http://www.dandanplay.com" target="_blank">弹弹PLAY</a>
@@ -105,16 +114,17 @@
 	</div>
 
 	<hr>
-	<footer class="text-center">
+<div class="footer">
+	<div class="text-center">
 		<div class="container">
 			<div class="row">
 				<div class="col-12">
-					<p>Copyright © 2012-2018. dandanplay.com All rights reserved. 保留一切权利 | Website design: <a href="https://blog.nchyn.com">Nchyn</a></p>
+					<p>Copyright © 2012-2019. dandanplay.com All rights reserved. 保留一切权利 </a></p>
 				</div>
 			</div>
 		</div>
 
-	</footer>
+	</div>
 </div>
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/popper.min.js"></script>
