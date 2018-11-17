@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>@Model.AnimeTitle - @Model.EpisodeTitle</title>
 	<link rel="shortcut icon" href="/css/icon.png" type="image/x-icon">
 	<link href="/css/bootstrap-4.0.0.css" rel="stylesheet">
@@ -13,92 +13,85 @@
 		div.dplayer {
 			width: 100%;
 			top: 3%;
+			height: 70%
 		}
-	
-
 	</style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	<div class="container">
-		<a class="navbar-brand" href="http://www.dandanplay.com" target="_blank">弹弹PLAY</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
-					<a class="nav-link" href="/index.html">首页</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="http://www.dandanplay.com" target="_blank">关于弹弹play</a>
-				</li>
-
-				<li class="nav-item">
-					<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
-				</li>
-			</ul>
-			
-		</div>
-	</div>
-</nav>
-<div class="col-md-12 pb-1 pb-md-0" style="margin: 0.25in 0 0 0;">
-	<div class="card">
-	  <div class="card-body">
-			<div id="dplayer"></div>
-	  </div>
-	</div>
-</div>
-
-<script>
-	var dp = new DPlayer({
-		container: document.getElementById('dplayer'),  //播放器容器元素
-		theme: '@Model.Color', //控件的颜色
-		loop: false, //循环
-		screenshot: true, //截图
-		hotkey: true, //热键
-		preload: 'auto', //预加载
-		//logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
-		volume: 1, //默认音量
-		mutex: true, //互斥，阻止多个播放器同时播放
-		video: {
-			url: '@Model.Video',
-			pic: '@Model.Image',
-			type: 'auto'
-		},
-		danmaku: {
-			id: '@Model.Hash', //弹幕库id
-			api: '/dplayer/', //弹幕库api
-			bottom: '15%', //底部距离
-			unlimited: true //无限制
-			/*maximum: 60//最大弹幕
-			bottom: '15%' //防挡字幕*/
-			
-		}
-		/* subtitle: {
-        url: '字幕',//备用
-        type: 'webvtt',
-        fontSize: '25px',
-        bottom: '10%',
-        color: '#b7daff'
-	},*/
-	});
-</script>
-
-<!--<div class="footer">
-	<div class="text-center">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<p>Copyright © 2012-2019. dandanplay.com All rights reserved. 保留一切权利 </a></p>
-				</div>
+			<a class="navbar-brand" href="#">弹弹play</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="/index.html">媒体库首页</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="http://www.dandanplay.com" target="_blank">关于弹弹play</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link" href="https://github.com/kaedei/dandanplay-libraryindex" target="_blank">帮助改进此页面</a>
+					</li>
+				</ul>
 			</div>
 		</div>
+	</nav>
 
+	<div class="container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="/index.html">媒体库首页</a>
+				</li>
+				<li class="breadcrumb-item">
+					<a href="/index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					@Model.EpisodeTitle
+				</li>
+			</ol>
+		</nav>
+		<div id="dplayer"></div>
 	</div>
-</div>-->
-<script src="/js/jquery-3.2.1.min.js"></script>
-<!--<script src="/js/popper.min.js"></script>-->
-<script src="/js/bootstrap-4.0.0.js"></script>
+
+	<script>
+		var dp = new DPlayer({
+			container: document.getElementById('dplayer'),  //播放器容器元素
+			theme: '@Model.Color', //控件的颜色
+			loop: false, //循环
+			screenshot: true, //截图
+			hotkey: true, //热键
+			preload: 'auto', //预加载
+			//logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
+			volume: 1, //默认音量
+			mutex: true, //互斥，阻止多个播放器同时播放
+			video: {
+				url: '@Model.Video',
+				pic: '@Model.Image',
+				type: 'auto'
+			},
+			danmaku: {
+				id: '@Model.Hash', //弹幕库id
+				api: '/dplayer/', //弹幕库api
+				bottom: '15%', //底部距离
+				unlimited: true //无限制
+				//maximum: 60 //最大弹幕
+			}
+			/* subtitle: {
+				url: '字幕',//备用
+				type: 'webvtt',
+				fontSize: '25px',
+				bottom: '10%',
+				color: '#b7daff'
+			},*/
+		});
+	</script>
+	<script src="/js/jquery-3.2.1.min.js"></script>
+	<!--<script src="/js/popper.min.js"></script>-->
+	<script src="/js/bootstrap-4.0.0.js"></script>
 </body>
 </html>
