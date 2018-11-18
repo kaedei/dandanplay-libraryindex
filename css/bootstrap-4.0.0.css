@@ -625,6 +625,7 @@ pre code {
   min-height: 1px;
   padding-right: 15px;
   padding-left: 15px;
+  margin: 1rem 0 0 0;
 }
 
 .col {
@@ -3080,6 +3081,7 @@ fieldset:disabled a.btn {
   font-size: 0.875rem;
   line-height: 1.5;
   border-radius: 0.2rem;
+  margin: 0.03rem 0 0 0;
 }
 
 .btn-block {

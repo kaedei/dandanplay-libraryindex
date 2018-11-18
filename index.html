@@ -46,18 +46,18 @@
 
 	<div class="container">
 		<div class="row text-center">
-			<div class="col-md-12 pb-1 pb-md-0" style="margin: 0.25in 0 0 0;">
+			<div class="col-md-12 pb-1 pb-md-0">
 				<div class="card">
 					<div class="card-body">
 						<h3 class="card-title">
 							作品列表
 							@If.HasFilter
-							<a class="btn btn-sm btn-primary" href="/index.html">返回媒体库首页</a>
+							<a class="btn btn-sm btn-primary"  href="/index.html">返回媒体库首页</a>
 							@EndIf
 						</h3>
 						<p class="card-body">
 							@Each.AnimeTitles
-							<a class="btn btn-sm btn-outline-primary" href="/index.html?animeId=@Current.AnimeId">
+							<a class="btn btn-sm btn-outline-primary" href="/index.html?animeId=@Current.AnimeId" >
 								@Current.AnimeTitle
 								<span class="badge badge-primary">@Current.VideoCount</span>
 							</a>
@@ -67,7 +67,7 @@
 				</div>
 			</div>
 			@Each.VideoFiles
-			<div class="col-md-6 pb-1 pb-md-0" style="margin: 0.25in 0 0 0;">
+			<div class="col-md-6 pb-1 pb-md-0" >
 				<div class="card">
 					<a href="/web/@Current.Hash">
 						<img class="card-img-top" src="/api/v1/image/@Current.Hash" alt="Card image cap">
