@@ -29,6 +29,16 @@
 					<li class="nav-item active">
 						<a class="nav-link" href="/index.html">媒体库首页</a>
 					</li>
+					@IfNot.IsAnonymous
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							@@Model.UserName
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="/logout">注销登录</a>
+						</div>
+					</li>
+					@EndIf
 					<li class="nav-item">
 						<a class="nav-link" href="http://www.dandanplay.com" target="_blank">关于弹弹play</a>
 					</li>
@@ -57,41 +67,43 @@
 		</nav>
 		<div id="dplayer"></div>
 	</div>
-
-	<script>
-		var dp = new DPlayer({
-			container: document.getElementById('dplayer'),  //播放器容器元素
-			theme: '@Model.Color', //控件的颜色
-			loop: false, //循环
-			screenshot: true, //截图
-			hotkey: true, //热键
-			preload: 'auto', //预加载
-			//logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
-			volume: 1, //默认音量
-			mutex: true, //互斥，阻止多个播放器同时播放
-			video: {
-				url: '@Model.Video',
-				pic: '@Model.Image',
-				type: 'auto'
-			},
-			danmaku: {
-				id: '@Model.Hash', //弹幕库id
-				api: '/dplayer/', //弹幕库api
-				bottom: '15%', //底部距离
-				unlimited: true //无限制
-				//maximum: 60 //最大弹幕
-			}
-			/* subtitle: {
-				url: '字幕',//备用
-				type: 'webvtt',
-				fontSize: '25px',
-				bottom: '10%',
-				color: '#b7daff'
-			},*/
-		});
-	</script>
 	<script src="/js/jquery-3.2.1.min.js"></script>
 	<!--<script src="/js/popper.min.js"></script>-->
 	<script src="/js/bootstrap-4.0.0.js"></script>
+	<script>
+		$(document).ready(function () {
+			var dp = new DPlayer({
+				container: document.getElementById('dplayer'),  //播放器容器元素
+				theme: '@Model.Color', //控件的颜色
+				loop: false, //循环
+				screenshot: true, //截图
+				hotkey: true, //热键
+				preload: 'none', //预加载
+				//logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
+				volume: 1, //默认音量
+				mutex: true, //互斥，阻止多个播放器同时播放
+				video: {
+					url: '@Model.Video',
+					pic: '@Model.Image',
+					type: 'auto'
+				},
+				danmaku: {
+					id: '@Model.Hash', //弹幕库id
+					api: '/dplayer/', //弹幕库api
+					bottom: '15%', //底部距离
+					unlimited: true //无限制
+					//maximum: 60 //最大弹幕
+				}
+				/* subtitle: {
+					url: '字幕',//备用
+					type: 'webvtt',
+					fontSize: '25px',
+					bottom: '10%',
+					color: '#b7daff'
+				},*/
+			});
+			$(".dplayer-video").attr("crossorigin", "use-credentials");
+		});
+	</script>
 </body>
 </html>

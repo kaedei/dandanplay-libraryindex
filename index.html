@@ -29,6 +29,16 @@
 					<li class="nav-item active">
 						<a class="nav-link" href="/index.html">媒体库首页</a>
 					</li>
+					@IfNot.IsAnonymous
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							@@Model.UserName
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+							<a class="dropdown-item" href="/logout">注销登录</a>
+						</div>
+					</li>
+					@EndIf
 					<li class="nav-item">
 						<a class="nav-link" href="http://www.dandanplay.com" target="_blank">关于弹弹play</a>
 					</li>
@@ -57,7 +67,7 @@
 						</h3>
 						<p class="card-body">
 							@Each.AnimeTitles
-							<a class="btn btn-sm btn-outline-primary" href="/index.html?animeId=@Current.AnimeId">
+							<a class="btn btn-sm btn-outline-primary" style="margin-bottom: 4px;" href="/index.html?animeId=@Current.AnimeId">
 								@Current.AnimeTitle
 								<span class="badge badge-primary">@Current.VideoCount</span>
 							</a>
@@ -70,7 +80,7 @@
 			<div class="col-md-6 pb-1 pb-md-0" style="margin: 0.25in 0 0 0;">
 				<div class="card">
 					<a href="/web/@Current.Hash">
-						<img class="card-img-top" src="/api/v1/image/@Current.Hash" alt="Card image cap">
+						<img class="card-img-top" src="/image/@Current.Hash" alt="Card image cap">
 					</a>
 					<div class="card-body">
 						<h5 class="card-title">
