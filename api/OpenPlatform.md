@@ -60,7 +60,8 @@ GET https://api.acplay.net/api/v1/match?filename=轻音少女10&hash=00000000000
 ### 5.测试视频
 
 推荐使用下面的视频测试API有效性，此视频前16MB数据的MD5为  `658d05841b9476ccc7420b3f0bb21c3b`
-下载地址：http://pan.baidu.com/s/1GNkQE
+
+- 下载地址：http://pan.baidu.com/s/1GNkQE
 
 ## 三、在线文档和调试工具
 
@@ -160,7 +161,7 @@ curl -X GET --header 'Accept:application/json' --header 'Authorization: Bearer e
 ```
 
 ### 3.在在线调试工具中调试需要验证的API
-首先，你需要通过各种方式获取到 `token` ，可以通过代码调用的方式获取，或者是使用在线工具手动构建登录请求。
+首先，你需要通过上文所述的各种方式登录后获取到 `token` ，可以通过代码调用的方式获取，也可以使用在线工具手动构建登录请求。
 
 
 获取到token之后，在页面右上角的文本框中，填写 `Bearer+空格+你的token`：
