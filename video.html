@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>@Model.AnimeTitle - @Model.EpisodeTitle</title>
+	<title>@Model.AnimeTitle - @Model.EpisodeTitle - @Model.WebSiteName</title>
 	<link rel="shortcut icon" href="/css/icon.png" type="image/x-icon">
 	<link href="/css/bootstrap-4.0.0.css" rel="stylesheet">
 	<link rel="stylesheet" href="/css/DPlayer.min.css">
@@ -13,21 +13,22 @@
 		div.dplayer {
 			width: 100%;
 			top: 3%;
-			height: 70%
+			height: 70%;
+			margin-bottom: 40px;
 		}
 	</style>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="#">弹弹play</a>
+			<a class="navbar-brand" href="#">@Model.WebSiteName</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="/index.html">媒体库首页</a>
+						<a class="nav-link" href="/index.html">首页</a>
 					</li>
 					@IfNot.IsAnonymous
 					<li class="nav-item dropdown">
@@ -40,7 +41,7 @@
 					</li>
 					@EndIf
 					<li class="nav-item">
-						<a class="nav-link" href="http://www.dandanplay.com" target="_blank">关于弹弹play</a>
+						<a class="nav-link" href="@Model.AboutLink" target="_blank">关于</a>
 					</li>
 
 					<li class="nav-item">
@@ -55,7 +56,7 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="/index.html">媒体库首页</a>
+					<a href="/index.html">首页</a>
 				</li>
 				<li class="breadcrumb-item">
 					<a href="/index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
@@ -65,8 +66,41 @@
 				</li>
 			</ol>
 		</nav>
+
 		<div id="dplayer"></div>
+
+		<div class="card">
+			<div class="card-header">
+				剧集列表
+			</div>
+			<div class="card-body">
+				<div class="list-group list-group-flush">
+					@Each.VideoFiles
+					<a href="/web/@Current.Id" class="list-group-item list-group-item-action
+				@If.IsCurrent
+				active
+				@EndIf
+			   ">
+						@Current.EpisodeTitle
+						<small>
+							@Current.FileName
+						</small>
+					</a>
+					@EndEach
+				</div>
+			</div>
+		</div>
 	</div>
+
+	<hr />
+	<div class="container">
+		<div class="row text-center">
+			<div class="col-12">
+				<p>@Model.WebSiteName 由弹弹play"远程访问"工具提供支持. All rights reserved. 保留一切权利</p>
+			</div>
+		</div>
+	</div>
+
 	<script src="/js/jquery-3.2.1.min.js"></script>
 	<!--<script src="/js/popper.min.js"></script>-->
 	<script src="/js/bootstrap-4.0.0.js"></script>
@@ -88,19 +122,19 @@
 					type: 'auto'
 				},
 				danmaku: {
-					id: '@Model.Hash', //弹幕库id
+					id: '@Model.Id', //弹幕库id
 					api: '/dplayer/', //弹幕库api
 					bottom: '15%', //底部距离
 					unlimited: true //无限制
 					//maximum: 60 //最大弹幕
-				}
-				/* subtitle: {
-					url: '字幕',//备用
+				},
+				subtitle: {
+					url: '@Model.SubtitleVtt',
 					type: 'webvtt',
 					fontSize: '25px',
 					bottom: '10%',
-					color: '#b7daff'
-				},*/
+					color: '#ffffff'
+				},
 			});
 			$(".dplayer-video").attr("crossorigin", "use-credentials");
 		});
