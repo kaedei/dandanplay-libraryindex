@@ -7,7 +7,8 @@
 ## 文件说明
 
 * `index.html` 为首页，将会通过 `http://本机ip/` 访问
-* `video.html` 为视频播放页面，将会通过 `http://本机ip/web/{视频hash}` 访问
+* `video.html` 为视频播放页面，将会通过 `http://本机ip/web/{视频id}` 访问
+* `login.html` 为登录页，当启用了web验证功能时，匿名用户访问任意页面将会被重定向到此页面，将会通过 `http://本机ip/login.html` 访问
 * 所有javascript文件需要放在 `js` 文件夹中
 * 所有css文件和图片文件需要放在 `css` 文件夹中
 
@@ -41,6 +42,13 @@
 * `@Current.Size` 视频文件体积（整数，Byte）
 * `@Current.SizeText` 视频文件体积（文字，如 _123.45MB_ ）
 * `@Current.LastPlay` 视频上次播放的日期时间（文字，如 _今天08:12_ 、 _昨天22:34_）
+* `@Model.WebSiteName` 网站名称
+* `@Model.AboutLink` 顶部关于按钮的目标网址
+* `@Model.UserName` 当前登录的用户名
+* `@Model.WebServerInfo` 当前网站的状态信息
+* `.IsAnonymous` 当前是否为匿名用户，可以配合@If语句使用
+* `.HasFilter` 当前是否设置了过滤条件
+* `.ShowVideoList` 当前是否设置了“显示首页视频列表”选项
 
 ### **video.html** 播放页的视图模型
 
@@ -52,11 +60,13 @@
 * `@Model.AnimeTitle` 作品标题
 * `@Model.EpisodeTitle` 剧集标题
 * `@Model.Color` 当前播放器的主题颜色（文字，如 _#0099FF_）
+* `@Model.SubtitleVtt` 字幕文件（vtt格式）地址
+* `@Each.VideoFiles` 剧集列表中的视频文件
+* `@Current.EpisodeTitle` 剧集标题
+* `@Current.FileName` 文件名
 
 ## 目前使用的第三方组件
 
 * [DPlayer](https://github.com/MoePlayer/DPlayer)
-* [ABPlayerHTML5](https://github.com/jabbany/ABPlayerHTML5) _已弃用_
-* [CommentCoreLibrary](https://github.com/jabbany/CommentCoreLibrary) _已弃用_
 * jQuery
 * Bootstrap
