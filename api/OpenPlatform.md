@@ -41,13 +41,11 @@ GET https://api.acplay.net/api/v1/match?filename=轻音少女10&hash=00000000000
 ```
 
 ### 3.服务器返回格式
-如果希望服务器返回JSON格式，请在HTTP Header中设置 `Accept: application/json`
-
-如果希望服务器返回XML格式，请在HTTP Header中设置 `Accept: application/xml`
-
-同时设置了这两项的情况下服务器将默认使用 `application/xml`
+如果希望服务器返回JSON格式，请在HTTP Header中设置 `Accept: application/json` 。如果希望服务器返回XML格式，请在HTTP Header中设置 `Accept: application/xml` 。同时设置了这两项的情况下服务器将默认使用 `application/xml` 。
 
 如果HTTP Header中未设置 `Accept` 头，服务器将默认使用 `application/json`，但我们不保证将来会一直保持这种设置，所以还是请尽量添加此头信息。
+
+推荐在HTTP Header中设置 `Accept-Encoding: gzip`，服务器将会使用压缩格式返回数据，这样能够有效节省传输的数据量与带宽消耗。目前服务器支持 gzip/deflate 两种压缩方式。
 
 ### 4.提交数据格式
 
