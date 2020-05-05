@@ -5,6 +5,7 @@
 	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon">
 	<title>@Model.WebSiteName</title>
 	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<script src="js/jquery-3.2.1.min.js"></script>
 	<style>
 		body {
 			background-image: url(@Model.Background);
@@ -106,7 +107,18 @@
 						文件体积：@Current.SizeText
 						<br>
 						上次播放：@Current.LastPlay
-					</p>
+						<br>
+						<script>
+							$(document).ready(function(){
+								$("#@Current.Hash").click(function(){
+									$.get("/api/v1/load/@Current.Hash",function(data,status){
+									
+									});
+								});
+							});
+							</script>
+							<button id=@Current.Hash class="btn btn-primary">在设备上播放</button>
+							</p>
 				</div>
 			</div>
 		</div>
@@ -124,7 +136,7 @@
 </div>
 
 
-	<script src="js/jquery-3.2.1.min.js"></script>
+
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap-4.0.0.js"></script>
 
