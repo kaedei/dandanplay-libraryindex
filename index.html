@@ -1,22 +1,37 @@
-﻿<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+﻿<html lang="zh-CN"><head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon">
 	<title>@Model.WebSiteName</title>
-	<link href="css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<script src="js/jquery-3.2.1.min.js"></script>
 	<style>
 		body {
 			background-image: url(@Model.Background);
 			background-attachment: fixed;
 			background-position: center;
 			background-repeat: no-repeat;
-			background-size: cover
+			background-size: cover;
 		}
 		.video-text {
 			line-height: 1.3;
+		}
+		.line-limit-length {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.nobords{
+			margin: 0;
+			padding: 0;
+		}
+		.li{
+    		position: sticky;
+			top: 0;
+		}
+		.transform{
+			background-color: rgba(255,255,255,0.8);
 		}
 	</style>
 </head>
@@ -57,71 +72,73 @@
 		</div>
 	</nav>
 
-	<div class="container">
-		<div class="row text-center">
-			<div class="col-md-12 pb-1 pb-md-0" style="margin: 0.25in 0 0 0;">
-				<div class="card">
-					<div class="card-body">
-						<h3 class="card-title">
-							作品列表
-							@If.HasFilter
-							<a class="btn btn-sm btn-primary" href="/index.html">返回首页</a>
-							@EndIf
-						</h3>
-						<p class="card-body">
-							@Each.AnimeTitles
-							<a class="btn btn-sm btn-outline-primary" style="margin-bottom: 4px;" href="/index.html?animeId=@Current.AnimeId">
-								@Current.AnimeTitle
-								<span class="badge badge-primary">@Current.VideoCount</span>
-							</a>
-							@EndEach
-						</p>
-					</div>
-				</div>
-			</div>
-			@If.ShowVideoList
-			@Each.VideoFiles
-			<div class="col-sm-6 col-md-4 pb-1 pb-md-0" style="margin: 0.25in 0 0 0;">
-				<div class="card">
-					<a href="/web/@Current.Id">
-						<img class="card-img-top" src="/image/@Current.Id" alt="Card image cap">
-					</a>
-					<div class="card-body">
-						<h5 class="card-title">
-							<a href="/index.html?animeId=@Current.AnimeId">@Current.AnimeTitle</a>
-						</h5>
-						<h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis">
-							<a href="/web/@Current.Id">@Current.EpisodeTitle</a>
-						</h5>
-						<p class="video-text">
-							@Current.Name
-							<br />
-							时长：@Current.DurationText
-							<br />
-							文件体积：@Current.SizeText
-							<br />
-							上次播放：@Current.LastPlay
-						</p>
-					</div>
-				</div>
-			</div>
+
+<div class="clearfix row nobords">
+	<div class="col-md-3 col-xs-12 float-left nobords">
+		<div class="list-group  li">
+			<a href="" class="list-group-item list-group-item-action active rounded-0 line-limit-length">作品列表</a>
+						@Each.AnimeTitles
+			<a href="/index.html?animeId=@Current.AnimeId" class="list-group-item list-group-item-action rounded-0 line-limit-length"><span class="badge badge-primary">@Current.VideoCount</span> @Current.AnimeTitle</a>
 			@EndEach
-			@EndIf
+			<a href="/index.html" class="list-group-item list-group-item-action active rounded-0 line-limit-length">返回首页</a>
+		  </div>
+	</div>
+	<div class=" col-md-9 col-xs-12 float-left transform">
+		@If.ShowVideoList
+		@Each.VideoFiles
+		<div class="col-sm-6 col-md-4 float-left pt-4">
+			<div class="card">
+				<a href="/web/@Current.Id">
+					<img class="card-img-top" src="/image/@Current.Id" alt="Card image cap">
+				</a>
+				<div class="card-body">
+					<h5 class="card-title line-limit-length">
+						<a href="/index.html?animeId=@Current.AnimeId">@Current.AnimeTitle</a>
+					</h5>
+					<h5 class="card-title" style="overflow: hidden; white-space: nowrap;text-overflow: ellipsis">
+					</h5>
+					<p class="video-text line-limit-length">
+						<a href="/web/@Current.Id">@Current.EpisodeTitle</a>
+						<br>
+						@Current.Name
+						<br>
+						时长：@Current.DurationText
+						<br>
+						文件体积：@Current.SizeText
+						<br>
+						上次播放：@Current.LastPlay
+						<br>
+						<script>
+							$(document).ready(function(){
+								$("#@Current.Hash").click(function(){
+									$.get("/api/v1/load/@Current.Hash",function(data,status){
+									
+									});
+								});
+							});
+							</script>
+							<button id=@Current.Hash class="btn btn-primary">在设备上播放</button>
+							</p>
+				</div>
+			</div>
 		</div>
+		@EndEach
+		@EndIf
+		
+		<div class="col-12 float-right text-center pt-5">			
+			<p>弹@Model.WebSiteName 由弹弹play"远程访问"工具提供支持. All rights reserved. 保留一切权利<br/>@Model.ServerInfo</p>
+			<p></p>
+		</div>
+
 	</div>
 
-	<hr>
-	<div class="container">
-		<div class="row text-center">
-			<div class="col-12">
-				<p>@Model.WebSiteName 由弹弹play"远程访问"工具提供支持. All rights reserved. 保留一切权利</p>
-				<p>@Model.ServerInfo</p>
-			</div>
-		</div>
-	</div>
-	<script src="js/jquery-3.2.1.min.js"></script>
+	
+</div>
+
+
+
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap-4.0.0.js"></script>
 
-</body>
-</html>
+
+</body></html>
