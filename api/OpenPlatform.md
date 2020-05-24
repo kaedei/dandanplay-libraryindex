@@ -55,7 +55,13 @@ GET https://api.acplay.net/api/v1/match?filename=轻音少女10&hash=00000000000
 
 请注意，当前弹弹play API不支持跨域提交。
 
-### 5.测试视频
+### 5.User-Agent
+
+请在所有请求的 HTTP Header 中附加客户端的 `User-Agent` 便于我们进行数据统计。**对于没有设置 User-Agent 的 API 请求，服务器可能会拒绝返回数据。**
+
+`User-Agent`的推荐格式为 `AppName/Version`。例如您的APP名称为 dandanplay-test，当前版本号是 1.2 ，那么可以设置成 `dandanplay-test/1.2`。APP名称推荐使用全部小写英文，版本号这里请遵循 `major.minor[.build[.revision]]` 格式，例如 1.0、1.2、1.2.3、1.2.3.456 都是正确的版本号。
+
+### 6.测试视频
 
 推荐使用下面的视频测试API有效性，此视频前16MB数据的MD5为  `658d05841b9476ccc7420b3f0bb21c3b`
 
