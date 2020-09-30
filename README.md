@@ -70,3 +70,7 @@
 * [DPlayer](https://github.com/MoePlayer/DPlayer)
 * jQuery
 * Bootstrap
+
+## 其他项目
+
+* https://github.com/CberYellowstone/DanDanPlay-PHP 弹弹play媒体库的PHP实现
