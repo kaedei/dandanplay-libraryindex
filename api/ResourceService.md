@@ -97,7 +97,7 @@
 
 | 参数     | 说明                      | 必需 | 示例         |
 |----------|---------------------------|------|--------------|
-| keyword  | 搜索关键词，已经过URI编码 | 是   | 魔法少女小圆 |
+| keyword  | 搜索关键词，已经经过URI编码 | 是   | 魔法少女小圆 |
 | subgroup | 字幕组ID                  | 否   | 123          |
 | type     | 资源类别ID                | 否   | 2            |
 | r        | 随机数，用于避免缓存      | 否   | 0.13579      |
@@ -172,3 +172,5 @@
 接口说明：
 
 参数将通过URL传递，最终的url格式应该类似于 `http://example.com/list?keyword={keyword}&subgroup={subgroupId}&type={typeId}&r={random}`
+
+当没有传递 `subgroup` 或 `type` 参数，或者参数数字小于0时，请忽略此参数。
