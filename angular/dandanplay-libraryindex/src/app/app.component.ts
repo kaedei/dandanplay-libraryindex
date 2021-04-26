@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   isCollapsed = false;
+  title = "弹弹play媒体库";
 }
