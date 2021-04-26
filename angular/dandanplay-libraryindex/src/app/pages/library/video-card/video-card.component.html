@@ -1,0 +1,8 @@
+<nz-card nzHoverable [nzCover]="coverTemplate">
+    <nz-card-meta nzTitle="{{ animeTitle }}" nzDescription="{{ episodeTitle }}">
+
+    </nz-card-meta>
+</nz-card>
+<ng-template #coverTemplate>
+    <img alt="example" [src]="imageUrl" />
+</ng-template>

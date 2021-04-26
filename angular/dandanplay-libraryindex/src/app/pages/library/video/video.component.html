@@ -1,1 +1,10 @@
-<p>video works!</p>
+<h1>所有视频</h1>
+
+<div nz-row nzJustify="space-around" nzAlign="top" nzGutter='12'>
+    <div nz-col nzSpan="6" *ngFor="let item of videoList">
+        <div class="inner-box">
+            <app-video-card [item]='item'>
+            </app-video-card>
+        </div>
+    </div>
+</div>
