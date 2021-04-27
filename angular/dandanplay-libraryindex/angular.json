@@ -36,7 +36,9 @@
               "src/theme.less",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/dplayer/dist/DPlayer.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -99,7 +101,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/dplayer/dist/DPlayer.min.js"
+            ]
           }
         },
         "lint": {

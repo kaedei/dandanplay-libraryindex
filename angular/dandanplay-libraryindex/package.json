@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~11.2.9",
     "@angular/platform-browser-dynamic": "~11.2.9",
     "@angular/router": "~11.2.9",
+    "dplayer": "^1.26.0",
     "ng-zorro-antd": "^11.4.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
