@@ -8,13 +8,15 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { PlayComponent } from './play/play.component';
 
 
 
 @NgModule({
   declarations: [
     VideoComponent,
-    VideoCardComponent
+    VideoCardComponent,
+    PlayComponent
   ],
   imports: [
     LibraryRoutingModule,

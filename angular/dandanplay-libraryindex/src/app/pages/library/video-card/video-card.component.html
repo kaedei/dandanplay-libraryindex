@@ -7,7 +7,7 @@
     <img alt="example" [src]="imageUrl" />
 </ng-template>
 <ng-template #actionPlay>
-    <a routerLink='/library/play' [queryParams]='{ id: item.Id }'>
+    <a [routerLink]="['/library/play',item.Id ]">
         <i nz-icon nzType="play-circle"></i>
     </a>
 </ng-template>
