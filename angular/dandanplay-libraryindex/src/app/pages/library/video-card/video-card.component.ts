@@ -10,7 +10,7 @@ import { LocalLibraryService } from 'src/app/core/services/local-library.service
 export class VideoCardComponent implements OnInit {
 
   @Input()
-  item: LibraryItem | undefined;
+  item!: LibraryItem;
 
   name = '';
   animeTitle = '';

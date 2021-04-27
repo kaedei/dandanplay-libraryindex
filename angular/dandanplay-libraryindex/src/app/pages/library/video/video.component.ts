@@ -9,6 +9,7 @@ import { LocalLibraryService } from 'src/app/core/services/local-library.service
 })
 export class VideoComponent implements OnInit {
   videoList: LibraryItem[] = [];
+  isLoading: boolean = false;
 
   constructor(private localLibraryService: LocalLibraryService) { }
 
@@ -17,9 +18,11 @@ export class VideoComponent implements OnInit {
   }
 
   refreshLibraryData(): void {
+    this.isLoading = true;
     this.localLibraryService.getLibrary()
       .subscribe(data => {
         this.videoList = data;
+        this.isLoading = false;
         console.log(this.videoList);
       });
   }

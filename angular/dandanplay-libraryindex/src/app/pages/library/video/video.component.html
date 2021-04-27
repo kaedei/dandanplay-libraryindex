@@ -1,4 +1,7 @@
 <h1>所有视频</h1>
+<button nz-button nzType="primary" [nzLoading]='isLoading' (click)='refreshLibraryData()'>
+    刷新
+</button>
 
 <div nz-row nzJustify="space-around" nzAlign="top" nzGutter='12'>
     <div nz-col nzSpan="6" *ngFor="let item of videoList">
@@ -8,3 +11,5 @@
         </div>
     </div>
 </div>
+
+<nz-back-top></nz-back-top>

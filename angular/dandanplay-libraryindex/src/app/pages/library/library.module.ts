@@ -5,6 +5,9 @@ import { LibraryRoutingModule } from './library-routing.module';
 import { VideoCardComponent } from './video-card/video-card.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzBackTopModule } from 'ng-zorro-antd/back-top';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 
 
@@ -17,7 +20,10 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     LibraryRoutingModule,
     CommonModule,
     NzCardModule,
-    NzGridModule
+    NzGridModule,
+    NzBackTopModule,
+    NzButtonModule,
+    NzIconModule
   ]
 })
 export class LibraryModule { }
