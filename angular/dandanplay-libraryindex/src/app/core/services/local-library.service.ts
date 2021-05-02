@@ -2,7 +2,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
-import { LibraryItem, LibraryResponse } from '../models/LibraryResponse';
+import { LibraryItem } from '../models/LibraryItem';
+import { PlayerConfigResponse } from '../models/PlayerConfigResponse';
 
 
 
@@ -18,13 +19,22 @@ export class LocalLibraryService {
   getLibrary(): Observable<LibraryItem[]> {
     const url = this.baseUrl + '/api/v1/library';
     return this.httpClient.get<LibraryItem[]>(url)
-    .pipe(
-      retry(3),
-      catchError(this.handleError)
-    );
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      );
   }
 
-  private handleError (error: HttpErrorResponse) {
+  getPlayerConfig(id: string): Observable<PlayerConfigResponse> {
+    const url = this.baseUrl + '/api/v1/playerconfig/' + id;
+    return this.httpClient.get<PlayerConfigResponse>(url)
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LibraryItem } from 'src/app/core/models/LibraryResponse';
+import { LibraryItem } from 'src/app/core/models/LibraryItem';
 import { LocalLibraryService } from 'src/app/core/services/local-library.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class VideoCardComponent implements OnInit {
     this.name = this.item?.Name ?? '';
     this.animeTitle = this.item?.AnimeTitle ?? this.name;
     this.episodeTitle = this.item?.EpisodeTitle ?? '';
-    this.imageUrl = this.baseUrl + "/web1/image/" + this.item?.Id;
+    this.imageUrl = this.baseUrl + "/api/v1/image/id/" + this.item?.Id;
   }
 
 }

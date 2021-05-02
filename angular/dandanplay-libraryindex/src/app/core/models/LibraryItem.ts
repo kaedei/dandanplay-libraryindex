@@ -1,7 +1,3 @@
-export interface LibraryResponse{
-
-}
-
 export interface LibraryItem{
     Id: string,
     Hash: string,
