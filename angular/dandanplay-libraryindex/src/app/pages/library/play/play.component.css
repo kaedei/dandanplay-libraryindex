@@ -1,12 +1,12 @@
 
     .dplayer-danmaku {
-        font-size: 30px;
+        font-size: 30px !important;
         height: 83%;
     }
 
     .dplayer-danmaku .dplayer-danmaku-right.dplayer-danmaku-move {
-        -webkit-animation: danmaku 20s linear;
-        animation: danmaku 20s linear;
+        -webkit-animation: danmaku 20s linear !important;
+        animation: danmaku 20s linear !important;
         -webkit-animation-play-state: paused;
         animation-play-state: paused;
     }

@@ -30,7 +30,8 @@ export class PlayComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.localLibraryService.getPlayerConfig(this.id).toPromise().then(cfg=>{
+    this.localLibraryService.getPlayerConfig(this.id)
+      .subscribe(cfg => {
         this.playerConfig = cfg;
         this.animeTitle = cfg.video.AnimeTitle;
         this.episodeTitle = cfg.video.EpisodeTitle;
@@ -68,6 +69,13 @@ export class PlayComponent implements OnInit {
         };
         this.dp = new DPlayer(config);
         this.el.nativeElement.querySelector('.dplayer-video').setAttribute('crossorigin', 'use-credentials');
+        
+        //update dplayer styles
+        //this.el.nativeElement.querySelector('.dplayer-danmaku').style.cssText = 'font-size: 30px; height: 83%;';
+        //this.el.nativeElement.querySelector('.dplayer-danmaku .dplayer-danmaku-right.dplayer-danmaku-move')
+        //  .style.cssText = '';
+        //this.el.nativeElement.querySelector('.dplayer-danmaku .dplayer-danmaku-item')
+        //  .style.cssText = '-webkit-text-stroke: 0.1px black; text-stroke: 0.1px black; text-shadow: 1.0px 1.0px 0.5px rgba(0, 0, 0, .5);';
       });
 
   }
