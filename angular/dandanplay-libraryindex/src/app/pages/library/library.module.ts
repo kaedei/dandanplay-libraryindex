@@ -8,9 +8,14 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { IconDefinition } from '@ant-design/icons-angular';
 import { PlayComponent } from './play/play.component';
 
+import {
+  EllipsisOutline
+} from '@ant-design/icons-angular/icons';
 
+const icons: IconDefinition[] = [ EllipsisOutline];
 
 @NgModule({
   declarations: [
@@ -25,7 +30,7 @@ import { PlayComponent } from './play/play.component';
     NzGridModule,
     NzBackTopModule,
     NzButtonModule,
-    NzIconModule
+    NzIconModule.forRoot(icons)
   ]
 })
 export class LibraryModule { }

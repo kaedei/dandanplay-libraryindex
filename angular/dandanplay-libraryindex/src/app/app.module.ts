@@ -13,8 +13,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { IconDefinition } from '@ant-design/icons-angular';
 
 registerLocaleData(zh);
+
+
+import {
+  MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, CloudServerOutline
+} from '@ant-design/icons-angular/icons';
+
+const icons: IconDefinition[] = [MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, CloudServerOutline];
+
 
 @NgModule({
   declarations: [
@@ -28,7 +38,8 @@ registerLocaleData(zh);
     BrowserAnimationsModule,
     IconsProviderModule,
     NzLayoutModule,
-    NzMenuModule
+    NzMenuModule,
+    NzIconModule.forRoot(icons)
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent]

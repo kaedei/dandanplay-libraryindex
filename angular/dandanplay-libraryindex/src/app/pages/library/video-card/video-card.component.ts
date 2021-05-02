@@ -26,7 +26,7 @@ export class VideoCardComponent implements OnInit {
     this.name = this.item?.Name ?? '';
     this.animeTitle = this.item?.AnimeTitle ?? this.name;
     this.episodeTitle = this.item?.EpisodeTitle ?? '';
-    this.imageUrl = this.baseUrl + "/image/" + this.item?.Id;
+    this.imageUrl = this.baseUrl + "/web1/image/" + this.item?.Id;
   }
 
 }
