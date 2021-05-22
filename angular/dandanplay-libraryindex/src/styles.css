@@ -2,7 +2,7 @@
 
 .dplayer-danmaku {
     font-size: 25px !important;
-    height: 83%;
+    height: 83% !important;
 }
 
 .dplayer-danmaku .dplayer-danmaku-right.dplayer-danmaku-move {
@@ -13,25 +13,7 @@
 }
 
 .dplayer-danmaku .dplayer-danmaku-item {
-    -webkit-text-stroke: 0.1px black;
-    text-stroke: 0.1px black;
-    text-shadow: 1.0px 1.0px 0.5px rgba(0, 0, 0, .5);
-}
-
-/* mobile */
-
-/* 控制条 mask 高度调小，避免影响双击切换暂停播放 */
-
-.dplayer-mobile .dplayer-controller-mask {
-    height: 60px;
-}
-
-/* 弹幕字体调小 */
-
-.dplayer-mobile .dplayer-danmaku {
-    font-size: 20px;
-}
-
-.dplayer.dplayer-arrow.dplayer-mobile .dplayer-danmaku {
-    font-size: 20px;
+    -webkit-text-stroke: 0.1px black !important;
+    text-stroke: 0.1px black !important;
+    text-shadow: 1.0px 1.0px 0.5px rgba(0, 0, 0, .5) !important;
 }

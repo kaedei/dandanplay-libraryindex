@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 import { LibraryItem } from '../models/LibraryItem';
 import { PlayerConfigResponse } from '../models/PlayerConfigResponse';
+import { WelcomeResponse } from '../models/WelcomeResponse';
 
 
 
@@ -15,6 +16,11 @@ export class LocalLibraryService {
   baseUrl = 'http://localhost:80';
 
   constructor(private httpClient: HttpClient) { }
+
+  testBaseUrl(testBaseUrl:string):Observable<WelcomeResponse>{
+    const url = testBaseUrl + "/api/v1/welcome";
+    return this.httpClient.get<WelcomeResponse>(url);
+  }
 
   getLibrary(): Observable<LibraryItem[]> {
     const url = this.baseUrl + '/api/v1/library';

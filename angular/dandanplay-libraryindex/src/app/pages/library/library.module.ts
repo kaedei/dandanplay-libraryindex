@@ -12,6 +12,7 @@ import { IconDefinition } from '@ant-design/icons-angular';
 import { PlayComponent } from './play/play.component';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzListModule } from 'ng-zorro-antd/list';
 
 import {
   EllipsisOutline
@@ -34,7 +35,8 @@ const icons: IconDefinition[] = [ EllipsisOutline];
     NzButtonModule,
     NzIconModule.forRoot(icons),
     NzBreadCrumbModule,
-    NzDividerModule
+    NzDividerModule,
+    NzListModule
   ]
 })
 export class LibraryModule { }

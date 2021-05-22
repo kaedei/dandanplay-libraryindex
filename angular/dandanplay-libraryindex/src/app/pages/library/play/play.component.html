@@ -45,3 +45,20 @@
 <nz-divider></nz-divider>
 
 <div nz-row id="dplayer" #dplayer></div>
+
+<nz-divider></nz-divider>
+
+<div>
+    <nz-list nzBordered="true" nzItemLayout="horizontal">
+        <nz-list-header>{{ animeTitle }} 剧集列表</nz-list-header>
+        <nz-list-item *ngFor="let item of videoFiles">
+            <nz-list-item-meta [nzDescription]="item.fileName">
+                <nz-list-item-meta-title>
+                   <a [routerLink]="'/library/play/' + item.id" [style]="item.isCurrent ? 'strong':''">
+                        {{ item.episodeTitle }}
+                    </a>
+                </nz-list-item-meta-title>
+            </nz-list-item-meta>
+        </nz-list-item>
+    </nz-list>
+</div>
