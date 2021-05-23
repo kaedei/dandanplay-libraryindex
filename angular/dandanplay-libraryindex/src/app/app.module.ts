@@ -8,7 +8,7 @@ import { zh_CN } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -20,10 +20,12 @@ registerLocaleData(zh);
 
 
 import {
-  MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, CloudServerOutline
+  MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, CloudServerOutline, UserOutline, LockOutline
 } from '@ant-design/icons-angular/icons';
+import { JwtInterceptor } from './core/helpers/JwtIntercepter';
+import { ErrorInterceptor } from './core/helpers/ErrorIntercepter';
 
-const icons: IconDefinition[] = [MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, CloudServerOutline];
+const icons: IconDefinition[] = [MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, CloudServerOutline, UserOutline, LockOutline];
 
 
 @NgModule({
@@ -41,7 +43,11 @@ const icons: IconDefinition[] = [MenuFoldOutline, MenuUnfoldOutline, DashboardOu
     NzMenuModule,
     NzIconModule.forRoot(icons)
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }],
+  providers: [
+    { provide: NZ_I18N, useValue: zh_CN },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

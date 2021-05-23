@@ -1,9 +1,10 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 import { LibraryItem } from '../models/LibraryItem';
 import { PlayerConfigResponse } from '../models/PlayerConfigResponse';
+import { User } from '../models/User';
 import { WelcomeResponse } from '../models/WelcomeResponse';
 
 
@@ -14,17 +15,26 @@ import { WelcomeResponse } from '../models/WelcomeResponse';
 export class LocalLibraryService {
 
   baseUrl = 'http://localhost:80';
+  headers = new HttpHeaders();
 
   constructor(private httpClient: HttpClient) { }
 
-  testBaseUrl(testBaseUrl:string):Observable<WelcomeResponse>{
+  testBaseUrl(testBaseUrl: string): Observable<WelcomeResponse> {
     const url = testBaseUrl + "/api/v1/welcome";
     return this.httpClient.get<WelcomeResponse>(url);
   }
 
+  auth(userName:string, password:string): Observable<User>{
+    const url = this.baseUrl + "/api/v1/auth";
+    return this.httpClient.post<User>(url, {
+      userName:userName,
+      password: password
+    });
+  }
+
   getLibrary(): Observable<LibraryItem[]> {
     const url = this.baseUrl + '/api/v1/library';
-    return this.httpClient.get<LibraryItem[]>(url)
+    return this.httpClient.get<LibraryItem[]>(url, { headers: this.headers })
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -33,11 +43,18 @@ export class LocalLibraryService {
 
   getPlayerConfig(id: string): Observable<PlayerConfigResponse> {
     const url = this.baseUrl + '/api/v1/playerconfig/' + id;
-    return this.httpClient.get<PlayerConfigResponse>(url)
+    return this.httpClient.get<PlayerConfigResponse>(url, { headers: this.headers })
       .pipe(
         retry(3),
         catchError(this.handleError)
       );
+  }
+
+  setToken(token: string) {
+    this.headers.delete("Authorization");
+    if (token !== "") {
+      this.headers.append("Authorization", "Bearer " + token)
+    }
   }
 
   private handleError(error: HttpErrorResponse) {
