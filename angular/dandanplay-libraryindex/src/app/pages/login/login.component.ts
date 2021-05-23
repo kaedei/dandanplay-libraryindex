@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { User } from 'src/app/core/models/User';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { LocalLibraryService } from 'src/app/core/services/local-library.service';
 
@@ -66,7 +67,18 @@ export class LoginComponent implements OnInit {
   }
 
   anonymousLogin() {
-    console.log("Anonymous login");
+    this.loading = true;
+    this.authenticationService.login(User.AnonymousUserName, User.AnonymousPassword)
+      .subscribe({
+        next: () => {
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.router.navigateByUrl(returnUrl);
+        },
+        error: error => {
+          this.notificationService.warning("登录失败", "登录失败，错误信息：\r\n" + error);
+          this.loading = false;
+        }
+      });
   }
 
   changeBaseUrl() {

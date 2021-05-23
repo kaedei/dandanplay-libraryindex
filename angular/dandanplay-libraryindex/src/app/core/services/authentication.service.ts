@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from '../models/User';
 import { LocalLibraryService } from './local-library.service';
@@ -33,7 +33,7 @@ export class AuthenticationService {
 
   logout() {
     localStorage.removeItem('user');
-    this.userSubject.next(User.createAnonymousUser());
+    this.userSubject.next(undefined);
     this.router.navigate(['/login']);
   }
 }

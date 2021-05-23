@@ -26,7 +26,7 @@
 <nz-divider></nz-divider>
 <nz-card nzTitle="修改远程服务器地址" style="max-width: 600px;">
   <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-    <input nz-input [(ngModel)]="baseUrl" placeholder="http://127.0.0.1:80 留空代表使用当前的服务器地址" />
+    <input nz-input [(ngModel)]="baseUrl" placeholder="http://127.0.0.1:80" />
   </nz-input-group>
   <ng-template #suffixButton>
     <button nz-button nzType="primary" (click)="testUrl()" [nzLoading]="isTestingUrl">
@@ -36,4 +36,5 @@
       保存修改
     </button>
   </ng-template>
+  <p>请填写带 http:// 协议的完整地址，末尾不能是斜杠符号。留空代表使用当前的服务器地址。</p>
 </nz-card>
