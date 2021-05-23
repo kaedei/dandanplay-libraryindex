@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { User } from '../models/User';
 import { LocalLibraryService } from './local-library.service';
 
@@ -9,25 +10,25 @@ import { LocalLibraryService } from './local-library.service';
 })
 export class AuthenticationService {
 
-  private userSubject: BehaviorSubject<User>;
-  public user: Observable<User>;
+  private userSubject: Subject<User>;
+  private user: Observable<User>;
+  public currentUser: User | undefined;
 
   constructor(private localLibraryService: LocalLibraryService,
     private router: Router) {
-    this.userSubject = new BehaviorSubject<User>(User.createAnonymousUser());
+    this.userSubject = new Subject<User>();
     this.user = this.userSubject.asObservable();
+    this.user.subscribe(u => this.currentUser = u);
   }
 
-  public get userValue(): User {
-    return this.userSubject.value;
-  }
 
-  login(userName: string, password: string) {
-    this.localLibraryService.auth(userName, password)
-      .subscribe(u => {
-        this.userSubject.next(u);
-        return u;
-      });
+  login(userName: string, password: string): Observable<User> {
+    return this.localLibraryService.auth(userName, password)
+      .pipe(
+        map(u => {
+          this.userSubject.next(u);
+          return u;
+        }));
   }
 
   logout() {

@@ -1,7 +1,5 @@
-<div nz-row>
-<h3>登录到弹弹play媒体库</h3>
-</div>
-<form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
+<nz-card nzTitle="登录到弹弹play媒体库">
+  <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
     <nz-form-item>
       <nz-form-control nzErrorTip="请输入用户名">
         <nz-input-group nzPrefixIcon="user">
@@ -17,9 +15,25 @@
       </nz-form-control>
     </nz-form-item>
     <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [nzLoading]="loading">
-        登录
+      登录
     </button>
   </form>
   <button nz-button class="anonymous-login-button" [nzLoading]="loading" (click)="anonymousLogin()">
-      游客登录
+    游客登录
   </button>
+</nz-card>
+
+<nz-divider></nz-divider>
+<nz-card nzTitle="修改远程服务器地址" style="max-width: 600px;">
+  <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
+    <input nz-input [(ngModel)]="baseUrl" placeholder="http://127.0.0.1:80 留空代表使用当前的服务器地址" />
+  </nz-input-group>
+  <ng-template #suffixButton>
+    <button nz-button nzType="primary" (click)="testUrl()" [nzLoading]="isTestingUrl">
+      测试
+    </button>
+    <button nz-button nzType="primary" (click)="changeBaseUrl()">
+      保存修改
+    </button>
+  </ng-template>
+</nz-card>

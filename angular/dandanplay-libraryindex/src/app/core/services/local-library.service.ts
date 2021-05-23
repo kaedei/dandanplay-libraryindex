@@ -14,7 +14,7 @@ import { WelcomeResponse } from '../models/WelcomeResponse';
 })
 export class LocalLibraryService {
 
-  baseUrl = 'http://localhost:80';
+  baseUrl = '';
   headers = new HttpHeaders();
 
   constructor(private httpClient: HttpClient) { }
@@ -24,10 +24,10 @@ export class LocalLibraryService {
     return this.httpClient.get<WelcomeResponse>(url);
   }
 
-  auth(userName:string, password:string): Observable<User>{
+  auth(userName: string, password: string): Observable<User> {
     const url = this.baseUrl + "/api/v1/auth";
     return this.httpClient.post<User>(url, {
-      userName:userName,
+      userName: userName,
       password: password
     });
   }
@@ -43,11 +43,7 @@ export class LocalLibraryService {
 
   getPlayerConfig(id: string): Observable<PlayerConfigResponse> {
     const url = this.baseUrl + '/api/v1/playerconfig/' + id;
-    return this.httpClient.get<PlayerConfigResponse>(url, { headers: this.headers })
-      .pipe(
-        retry(3),
-        catchError(this.handleError)
-      );
+    return this.httpClient.get<PlayerConfigResponse>(url, { headers: this.headers });
   }
 
   setToken(token: string) {

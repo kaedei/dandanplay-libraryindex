@@ -1,16 +1,3 @@
 <div nz-row>
-    <nz-input-group nzSearch [nzAddOnBefore]="tipText" [nzAddOnAfter]="suffixButton">
-        <input nz-input [(ngModel)]="baseUrl" placeholder="http://127.0.0.1:80 留空代表使用当前的服务器地址" />
-    </nz-input-group>
-    <ng-template #tipText>
-        <span>远程访问API位置：</span>
-    </ng-template>
-    <ng-template #suffixButton>
-        <button nz-button nzType="primary" (click)="testUrl()" [nzLoading]="isTestingUrl">
-            测试
-        </button>
-        <button nz-button nzType="primary" (click)="changeBaseUrl()">
-            确认修改
-        </button>
-    </ng-template>
+    欢迎使用弹弹play媒体库（版本2 内部测试）
 </div>
