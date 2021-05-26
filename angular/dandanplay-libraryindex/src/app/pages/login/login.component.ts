@@ -27,13 +27,14 @@ export class LoginComponent implements OnInit {
     private localLibraryService: LocalLibraryService,
     private notificationService: NzNotificationService
   ) {
-    if (this.authenticationService.currentUser) {
+    if (this.authenticationService.getCurrentUser()) {
       this.router.navigate(['/']);
     }
   }
 
   ngOnInit() {
     this.baseUrl = localStorage.getItem("baseUrl") ?? "";
+    this.localLibraryService.baseUrl = this.baseUrl;
     this.loginForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required]
@@ -55,9 +56,9 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authenticationService.login(this.loginForm.get("userName")?.value, this.loginForm.get("password")?.value)
       .subscribe({
-        next: () => {
-          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-          this.router.navigateByUrl(returnUrl);
+        next: user => {
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+            this.router.navigateByUrl(returnUrl);
         },
         error: error => {
           this.notificationService.warning("登录失败", "登录失败，错误信息：\r\n" + error);

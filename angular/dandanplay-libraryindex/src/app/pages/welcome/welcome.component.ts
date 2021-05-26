@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { catchError, retry } from 'rxjs/operators';
-import { LocalLibraryService } from 'src/app/core/services/local-library.service';
+import { AuthenticationService } from 'src/app/core/services/authentication.service';
 
 @Component({
   selector: 'app-welcome',
@@ -10,12 +8,14 @@ import { LocalLibraryService } from 'src/app/core/services/local-library.service
 })
 export class WelcomeComponent implements OnInit {
 
-  constructor(private localLibraryService: LocalLibraryService,
-    private notificationService: NzNotificationService) {
+  constructor(private authenticationService: AuthenticationService) {
   }
 
   ngOnInit(): void {
     
   }
 
+  logout(){
+    this.authenticationService.logout();
+  }
 }

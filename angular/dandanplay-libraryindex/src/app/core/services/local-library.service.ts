@@ -14,10 +14,15 @@ import { WelcomeResponse } from '../models/WelcomeResponse';
 })
 export class LocalLibraryService {
 
-  baseUrl = '';
-  headers = new HttpHeaders();
-
   constructor(private httpClient: HttpClient) { }
+
+  public get baseUrl() {
+    return localStorage.getItem("baseUrl") ?? "";
+  }
+
+  public set baseUrl(newBaseUrl: string) {
+    localStorage.setItem("baseUrl", newBaseUrl);
+  }
 
   testBaseUrl(testBaseUrl: string): Observable<WelcomeResponse> {
     const url = testBaseUrl + "/api/v1/welcome";
@@ -34,7 +39,7 @@ export class LocalLibraryService {
 
   getLibrary(): Observable<LibraryItem[]> {
     const url = this.baseUrl + '/api/v1/library';
-    return this.httpClient.get<LibraryItem[]>(url, { headers: this.headers })
+    return this.httpClient.get<LibraryItem[]>(url)
       .pipe(
         retry(3),
         catchError(this.handleError)
@@ -43,14 +48,7 @@ export class LocalLibraryService {
 
   getPlayerConfig(id: string): Observable<PlayerConfigResponse> {
     const url = this.baseUrl + '/api/v1/playerconfig/' + id;
-    return this.httpClient.get<PlayerConfigResponse>(url, { headers: this.headers });
-  }
-
-  setToken(token: string) {
-    this.headers.delete("Authorization");
-    if (token !== "") {
-      this.headers.append("Authorization", "Bearer " + token)
-    }
+    return this.httpClient.get<PlayerConfigResponse>(url);
   }
 
   private handleError(error: HttpErrorResponse) {
