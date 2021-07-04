@@ -46,7 +46,7 @@ export class LocalLibraryService {
   setBaseUrl(host: string, protocal: string, port: string) {
     localStorage.setItem("baseUrl.host", host);
     localStorage.setItem("baseUrl.protocal", protocal);
-    localStorage.setItem("baesUrl.port", port);
+    localStorage.setItem("baseUrl.port", port);
   }
 
   testBaseUrl(host: string, protocal: string, port: string): Observable<WelcomeResponse> {
