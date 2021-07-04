@@ -17,15 +17,40 @@ export class LocalLibraryService {
   constructor(private httpClient: HttpClient) { }
 
   public get baseUrl() {
-    return localStorage.getItem("baseUrl") ?? "";
+    return this.buildUrlString(this.host, this.protocal, this.port);
   }
 
-  public set baseUrl(newBaseUrl: string) {
-    localStorage.setItem("baseUrl", newBaseUrl);
+  buildUrlString(host: string, protocal: string, port: string): string {
+    if (host == null || host == "") {
+      return "";
+    }
+    var url = protocal + "://" + host;
+    if (port == null || port == "") {
+      return url;
+    }
+    return url + ":" + port;
   }
 
-  testBaseUrl(testBaseUrl: string): Observable<WelcomeResponse> {
-    const url = testBaseUrl + "/api/v1/welcome";
+  public get host() {
+    return localStorage.getItem("baseUrl.host") ?? "127.0.0.1";
+  }
+
+  public get protocal() {
+    return localStorage.getItem("baseUrl.protocal") ?? "http";
+  }
+
+  public get port() {
+    return localStorage.getItem("baseUrl.port") ?? "";
+  }
+
+  setBaseUrl(host: string, protocal: string, port: string) {
+    localStorage.setItem("baseUrl.host", host);
+    localStorage.setItem("baseUrl.protocal", protocal);
+    localStorage.setItem("baesUrl.port", port);
+  }
+
+  testBaseUrl(host: string, protocal: string, port: string): Observable<WelcomeResponse> {
+    const url = this.buildUrlString(host, protocal, port) + "/api/v1/welcome";
     return this.httpClient.get<WelcomeResponse>(url);
   }
 

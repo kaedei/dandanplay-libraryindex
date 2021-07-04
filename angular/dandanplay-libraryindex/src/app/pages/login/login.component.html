@@ -1,4 +1,11 @@
 <nz-card nzTitle="登录到弹弹play媒体库">
+  <p>
+    若未启用「Web验证」功能，可以直接
+    <button nz-button nzShape="round" class="anonymous-login-button" [nzLoading]="loading" (click)="anonymousLogin()">
+      游客登录
+    </button>
+    ，否则请提供有效的用户名和密码登录媒体库。
+  </p>
   <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
     <nz-form-item>
       <nz-form-control nzErrorTip="请输入用户名">
@@ -18,23 +25,30 @@
       登录
     </button>
   </form>
-  <button nz-button class="anonymous-login-button" [nzLoading]="loading" (click)="anonymousLogin()">
-    游客登录
-  </button>
 </nz-card>
 
 <nz-divider></nz-divider>
-<nz-card nzTitle="修改远程服务器地址" style="max-width: 600px;">
-  <nz-input-group nzSearch [nzAddOnAfter]="suffixButton">
-    <input nz-input [(ngModel)]="baseUrl" placeholder="http://127.0.0.1:80" />
-  </nz-input-group>
-  <ng-template #suffixButton>
-    <button nz-button nzType="primary" (click)="testUrl()" [nzLoading]="isTestingUrl">
-      测试
-    </button>
-    <button nz-button nzType="primary" (click)="changeBaseUrl()">
-      保存修改
-    </button>
-  </ng-template>
-  <p>请填写带 http:// 协议的完整地址，末尾不能是斜杠符号。留空代表使用当前的服务器地址。</p>
+<nz-card nzTitle="『远程访问』地址" style="max-width: 600px;">
+  <p>
+    在此处修改远程访问服务器所在的地址（填入PC版弹弹play客户端->远程访问页上显示的IP地址），修改完成后记得保存设置。
+  </p>
+  <nz-form-item>
+    <nz-input-group nzCompact>
+      <nz-select [(ngModel)]="protocal">
+        <nz-option [nzLabel]="'http://'" [nzValue]="'http'"></nz-option>
+        <nz-option [nzLabel]="'https://'" [nzValue]="'https'"></nz-option>
+      </nz-select>
+      <input type="text" nz-input placeholder="127.0.0.1" style="width:150px;" [(ngModel)]="host" />
+      <input type="text" disabled nz-input placeholder=":" class="demo-input-split"
+        style="width: 30px; border-left: 0px; border-right: 0px; pointer-events: none; background-color: rgb(255, 255, 255);" />
+      <input type="text" nz-input placeholder="80" style="width: 60px;" [(ngModel)]="port" />
+
+      <button nz-button nzType="default" (click)="testUrl()" [nzLoading]="isTestingUrl">
+        测试连接
+      </button>
+      <button nz-button nzType="primary" (click)="changeBaseUrl()">
+        保存设置
+      </button>
+    </nz-input-group>
+  </nz-form-item>
 </nz-card>

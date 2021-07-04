@@ -9,7 +9,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 
 @NgModule({
@@ -26,7 +26,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     LoginRoutingModule,
     NzNotificationModule,
     NzCardModule,
-    NzDividerModule
+    NzDividerModule,
+    NzSelectModule
   ]
 })
 export class LoginModule { }

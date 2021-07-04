@@ -17,6 +17,9 @@ export class LoginComponent implements OnInit {
   loading = false;
 
   baseUrl: string = "";
+  protocal: string = "";
+  host: string = "";
+  port: string = "";
   isTestingUrl: boolean = false;
 
   constructor(
@@ -33,8 +36,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.baseUrl = localStorage.getItem("baseUrl") ?? "";
-    this.localLibraryService.baseUrl = this.baseUrl;
+    this.protocal = this.localLibraryService.protocal;
+    this.host = this.localLibraryService.host;
+    this.port = this.localLibraryService.port;
+    this.baseUrl = this.localLibraryService.baseUrl;
     this.loginForm = this.formBuilder.group({
       userName: ['', Validators.required],
       password: ['', Validators.required]
@@ -57,8 +62,8 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.loginForm.get("userName")?.value, this.loginForm.get("password")?.value)
       .subscribe({
         next: user => {
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-            this.router.navigateByUrl(returnUrl);
+          const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+          this.router.navigateByUrl(returnUrl);
         },
         error: error => {
           this.notificationService.warning("登录失败", "登录失败，错误信息：\r\n" + error);
@@ -83,9 +88,8 @@ export class LoginComponent implements OnInit {
   }
 
   changeBaseUrl() {
-    this.baseUrl = this.baseUrl.trim();
-    this.localLibraryService.baseUrl = this.baseUrl;
-    localStorage.setItem("baseUrl", this.baseUrl);
+    this.localLibraryService.setBaseUrl(this.host, this.protocal, this.port);
+    this.baseUrl = this.localLibraryService.baseUrl;
     if (!this.baseUrl || this.baseUrl == "") {
       this.notificationService.success("修改成功", "远程访问API已经重置为默认地址");
     } else {
@@ -95,15 +99,16 @@ export class LoginComponent implements OnInit {
 
   testUrl() {
     this.isTestingUrl = true;
-    this.localLibraryService.testBaseUrl(this.baseUrl)
+    const urlString = this.localLibraryService.buildUrlString(this.host, this.protocal, this.port);
+    this.localLibraryService.testBaseUrl(this.host, this.protocal, this.port)
       .subscribe(
         data => {
-          var msg = "服务器 " + this.baseUrl + " 连接成功。当前版本：" + data.version + "，当前服务器时间：" + data.time + "。需要密钥：" + data.tokenRequired;
+          var msg = "服务器 " + urlString + " 连接成功。当前版本：" + data.version + "，当前服务器时间：" + data.time + "。需要密钥：" + data.tokenRequired;
           this.notificationService.success("测试成功", msg);
           this.isTestingUrl = false;
         },
         (error) => {
-          var msg = "服务器 " + this.baseUrl + " 连接失败。请保证 " + this.baseUrl + "/api/v1/welcome 是可访问的。";
+          var msg = "服务器 " + urlString + " 连接失败。请保证 " + urlString + "/api/v1/welcome 是可访问的。";
           this.notificationService.error("测试失败", msg);
           this.isTestingUrl = false;
         });

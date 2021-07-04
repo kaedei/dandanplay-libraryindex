@@ -1,5 +1,5 @@
 .login-form {
-    max-width: 300px;
+    max-width: 250px;
   }
 
   .login-form-margin {
@@ -16,6 +16,6 @@
   }
 
 .anonymous-login-button {
-  max-width: 300px;
+  max-width: 100px;
   width: 100%;
 }
