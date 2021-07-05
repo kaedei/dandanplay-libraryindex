@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
           this.router.navigateByUrl(returnUrl);
         },
         error: error => {
-          this.notificationService.warning("登录失败", "登录失败，错误信息：\r\n" + error);
+          this.notificationService.warning("登录失败", "登录服务器 " + this.baseUrl + " 失败，错误信息：\r\n" + error);
           this.loading = false;
         }
       });
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
           this.isTestingUrl = false;
         },
         (error) => {
-          var msg = "修改失败。服务器 " + urlString + " 未能正确连接。请保证 " + urlString + "/api/v1/welcome 是可访问的。";
+          var msg = "修改失败，服务器未能正确连接。请保证 " + urlString + "/api/v1/welcome 是可访问的。";
           this.notificationService.error("修改失败", msg);
           this.isTestingUrl = false;
         });

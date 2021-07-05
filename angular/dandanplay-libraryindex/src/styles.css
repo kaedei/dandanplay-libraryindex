@@ -8,8 +8,6 @@
 .dplayer-danmaku .dplayer-danmaku-right.dplayer-danmaku-move {
     -webkit-animation: danmaku 10s linear !important;
     animation: danmaku 10s linear !important;
-    -webkit-animation-play-state: paused;
-    animation-play-state: paused;
 }
 
 .dplayer-danmaku .dplayer-danmaku-item {
