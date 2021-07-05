@@ -30,7 +30,7 @@
 <nz-divider></nz-divider>
 <nz-card nzTitle="『远程访问』地址" style="max-width: 600px;">
   <p>
-    在此处修改远程访问服务器所在的地址（填入PC版弹弹play客户端->远程访问页上显示的IP地址），修改完成后记得保存设置。
+    在此处修改远程访问服务器所在的地址（填入PC版客户端->远程访问页上显示的IP地址），修改完成后记得保存设置。
   </p>
   <nz-form-item>
     <nz-input-group nzCompact>
@@ -43,10 +43,7 @@
         style="width: 30px; border-left: 0px; border-right: 0px; pointer-events: none; background-color: rgb(255, 255, 255);" />
       <input type="text" nz-input placeholder="80" style="width: 60px;" [(ngModel)]="port" />
 
-      <button nz-button nzType="default" (click)="testUrl()" [nzLoading]="isTestingUrl">
-        测试连接
-      </button>
-      <button nz-button nzType="primary" (click)="changeBaseUrl()">
+      <button nz-button nzType="primary" (click)="changeBaseUrl()" [nzLoading]="isTestingUrl">
         保存设置
       </button>
     </nz-input-group>

@@ -81,38 +81,35 @@ export class LoginComponent implements OnInit {
           this.router.navigateByUrl(returnUrl);
         },
         error: error => {
-          this.notificationService.warning("登录失败", "登录失败，错误信息：\r\n" + error);
+          this.notificationService.warning("登录失败", "登录服务器 " + this.baseUrl + " 失败，错误信息：\r\n" + error);
           this.loading = false;
         }
       });
   }
 
   changeBaseUrl() {
-    this.localLibraryService.setBaseUrl(this.host, this.protocal, this.port);
-    this.baseUrl = this.localLibraryService.baseUrl;
-    if (!this.baseUrl || this.baseUrl == "") {
-      this.notificationService.success("修改成功", "远程访问API已经重置为默认地址");
-    } else {
-      this.notificationService.success("修改成功", "远程访问API已经修改为 " + this.baseUrl);
-    }
-  }
-
-  testUrl() {
     this.isTestingUrl = true;
+
     const urlString = this.localLibraryService.buildUrlString(this.host, this.protocal, this.port);
     this.localLibraryService.testBaseUrl(this.host, this.protocal, this.port)
       .subscribe(
         data => {
-          var msg = "服务器 " + urlString + " 连接成功。当前版本：" + data.version + "，当前服务器时间：" + data.time + "。需要密钥：" + data.tokenRequired;
-          this.notificationService.success("测试成功", msg);
+          this.localLibraryService.setBaseUrl(this.host, this.protocal, this.port);
+          this.baseUrl = this.localLibraryService.baseUrl;
+          if (!this.baseUrl || this.baseUrl == "") {
+            this.notificationService.success("修改成功", "远程访问API已经重置为默认地址");
+          } else {
+            this.notificationService.success("修改成功", "远程访问API已经修改为 " + this.baseUrl);
+          }
           this.isTestingUrl = false;
         },
         (error) => {
-          var msg = "服务器 " + urlString + " 连接失败。请保证 " + urlString + "/api/v1/welcome 是可访问的。";
-          this.notificationService.error("测试失败", msg);
+          var msg = "修改失败。服务器 " + urlString + " 未能正确连接。请保证 " + urlString + "/api/v1/welcome 是可访问的。";
+          this.notificationService.error("修改失败", msg);
           this.isTestingUrl = false;
         });
-  }
 
+
+  }
 
 }
