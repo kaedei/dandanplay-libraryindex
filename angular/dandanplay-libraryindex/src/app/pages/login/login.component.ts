@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
           this.isTestingUrl = false;
         },
         (error) => {
-          var msg = "修改失败，服务器未能正确连接。请保证 " + urlString + "/api/v1/welcome 是可访问的。";
+          var msg = "修改失败，服务器未能正确连接。请确认 " + urlString + " 是可访问的。";
           this.notificationService.error("修改失败", msg);
           this.isTestingUrl = false;
         });
