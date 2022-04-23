@@ -1,0 +1,51 @@
+<nz-card nzTitle="登录到弹弹play媒体库">
+  <p>
+    若未启用「Web验证」功能，可以直接
+    <button nz-button nzShape="round" class="anonymous-login-button" [nzLoading]="loading" (click)="anonymousLogin()">
+      游客登录
+    </button>
+    ，否则请提供有效的用户名和密码登录媒体库。
+  </p>
+  <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入用户名">
+        <nz-input-group nzPrefixIcon="user">
+          <input type="text" nz-input formControlName="userName" placeholder="用户名" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="请输入密码">
+        <nz-input-group nzPrefixIcon="lock">
+          <input type="password" nz-input formControlName="password" placeholder="密码" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [nzLoading]="loading">
+      登录
+    </button>
+  </form>
+</nz-card>
+
+<nz-divider></nz-divider>
+<nz-card nzTitle="『远程访问』地址" style="max-width: 600px;">
+  <p>
+    在此处修改远程访问服务器所在的地址（填入PC版客户端->远程访问页上显示的IP地址），修改完成后记得保存设置。
+  </p>
+  <nz-form-item>
+    <nz-input-group nzCompact>
+      <nz-select [(ngModel)]="protocal">
+        <nz-option [nzLabel]="'http://'" [nzValue]="'http'"></nz-option>
+        <nz-option [nzLabel]="'https://'" [nzValue]="'https'"></nz-option>
+      </nz-select>
+      <input type="text" nz-input placeholder="127.0.0.1" style="width:150px;" [(ngModel)]="host" />
+      <input type="text" disabled nz-input placeholder=":" class="demo-input-split"
+        style="width: 30px; border-left: 0px; border-right: 0px; pointer-events: none; background-color: rgb(255, 255, 255);" />
+      <input type="text" nz-input placeholder="80" style="width: 60px;" [(ngModel)]="port" />
+
+      <button nz-button nzType="primary" (click)="changeBaseUrl()" [nzLoading]="isTestingUrl">
+        保存设置
+      </button>
+    </nz-input-group>
+  </nz-form-item>
+</nz-card>

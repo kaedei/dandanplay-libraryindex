@@ -1,0 +1,52 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="/">
+        <img src="logo.png" alt="logo">
+        <h1>{{ title }}</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="仪表盘" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/welcome">欢迎</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="媒体库" nzIcon="cloud-server">
+        <ul>
+          <!-- <li nz-menu-item nzMatchRouter>
+            <a routerLink="/library/bangumi">番剧列表</a>
+          </li> -->
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/library/video">所有视频</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class='right-layout'>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <i class="trigger"
+               nz-icon
+               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></i>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+    <nz-footer>弹弹play媒体库 ©2021 By Kaedei</nz-footer>
+  </nz-layout>
+</nz-layout>
