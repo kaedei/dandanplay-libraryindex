@@ -1,6 +1,6 @@
 # DandanplayLibraryindex
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.8.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
 ## Development server
 
@@ -25,3 +25,9 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## 弹弹play PC版
+
+PC版默认使用路径 `/web2` （例如`http://127.0.0.1:80/web2`）作为Angular版媒体库前端应用的路径，编译命令为：
+
+`ng build --configuration production --base-href /web2/ --deploy-url /web2/`
