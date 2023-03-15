@@ -5,10 +5,10 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>@Model.AnimeTitle - @Model.EpisodeTitle - @Model.WebSiteName</title>
-	<link rel="shortcut icon" href="/css/icon.png" type="image/x-icon">
-	<link href="/css/bootstrap-4.0.0.css" rel="stylesheet">
-	<link rel="stylesheet" href="/css/DPlayer.min.css">
-	<script src="/js/DPlayer.min.js"></script>
+	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon">
+	<link href="css/bootstrap-4.0.0.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/DPlayer.min.css">
+	<script src="js/DPlayer.min.js"></script>
 	<style type="text/css">
 		/* ReSharper disable InvalidValue */
 		/* ReSharper disable CssNotResolved */
@@ -36,6 +36,10 @@
 				text-stroke: 0.1px black;
 				text-shadow: 1.0px 1.0px 0.5px rgba(0, 0, 0, .5);
 			}
+
+		.dplayer-subtitle {
+			text-shadow: 2px 2px 4px rgb(0 0 0);
+		}
 
 		/* mobile */
 
@@ -69,7 +73,7 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
-						<a class="nav-link" href="/index.html">首页</a>
+						<a class="nav-link" href="index.html">首页</a>
 					</li>
 					@IfNot.IsAnonymous
 					<li class="nav-item dropdown">
@@ -77,7 +81,7 @@
 							@@Model.UserName
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="/logout">注销登录</a>
+							<a class="dropdown-item" href="logout">注销登录</a>
 						</div>
 					</li>
 					@EndIf
@@ -97,10 +101,10 @@
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="/index.html">首页</a>
+					<a href="index.html">首页</a>
 				</li>
 				<li class="breadcrumb-item">
-					<a href="/index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
+					<a href="index.html?animeId=@Model.AnimeId">@Model.AnimeTitle</a>
 				</li>
 				<li class="breadcrumb-item active" aria-current="page">
 					@Model.EpisodeTitle
@@ -117,7 +121,7 @@
 			<div class="card-body">
 				<div class="list-group list-group-flush">
 					@Each.VideoFiles
-					<a href="/web/@Current.Id" class="list-group-item list-group-item-action
+					<a href="video.html?id=@Current.Id" class="list-group-item list-group-item-action
 				@If.IsCurrent
 				active
 				@EndIf
@@ -142,9 +146,9 @@
 		</div>
 	</div>
 
-	<script src="/js/jquery-3.2.1.min.js"></script>
-	<!--<script src="/js/popper.min.js"></script>-->
-	<script src="/js/bootstrap-4.0.0.js"></script>
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<!--<script src="js/popper.min.js"></script>-->
+	<script src="js/bootstrap-4.0.0.js"></script>
 	<script>
 		$(document).ready(function () {
 			var dp = new DPlayer({
@@ -164,7 +168,7 @@
 				},
 				danmaku: {
 					id: '@Model.Id', //弹幕库id
-					api: '/dplayer/', //弹幕库api
+					api: 'dplayer/', //弹幕库api
 					bottom: '15%', //底部距离
 					unlimited: true //无限制
 					//maximum: 60 //最大弹幕
@@ -172,8 +176,8 @@
 				subtitle: {
 					url: '@Model.SubtitleVtt',
 					type: 'webvtt',
-					fontSize: '25px',
-					bottom: '10%',
+					fontSize: '40px',
+					bottom: '5%',
 					color: '#ffffff'
 				},
 			});
