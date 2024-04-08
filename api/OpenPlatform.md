@@ -1,6 +1,6 @@
 # 弹弹play开放平台介绍
 
-开放平台文档及在线调试工具：https://api.acplay.net/swagger
+开放平台文档及在线调试工具：https://api.dandanplay.net/swagger
 
 ## 一、介绍
 
@@ -13,19 +13,19 @@
 
 ### 2.客户端调用流程
 
-首先，在打开视频文件的时候，客户端应该调用 [Match API](https://api.acplay.net/swagger/ui/index#!/Match/Match_MatchAsync)，传递视频文件名、hash、长度、大小之后，服务器端对文件进行识别。Match API会返回一个“此文件最有可能是...”的列表，用户需要在此列表中选择一个最适合的项目。
+首先，在打开视频文件的时候，客户端应该调用 [Match API](https://api.dandanplay.net/swagger/ui/index#!/Match/Match_MatchAsync)，传递视频文件名、hash、长度、大小之后，服务器端对文件进行识别。Match API会返回一个“此文件最有可能是...”的列表，用户需要在此列表中选择一个最适合的项目。
 
 客户端将会得到一个`节目编号(EpisodeId)`，请保存此视频文件和此`节目编号`的关联。（`节目编号`表示的是某个动画的某一集，一个`节目编号`可以关联很多个视频，一个视频只能关联到一个`节目编号`。）
 
-之后，客户端就可以通过`节目编号`来调用 [Comment API](https://api.acplay.net/swagger/ui/index#!/Comment/Comment_GetAsync) 获取弹弹play服务器上的弹幕了。
+之后，客户端就可以通过`节目编号`来调用 [Comment API](https://api.dandanplay.net/swagger/ui/index#!/Comment/Comment_GetAsync) 获取弹弹play服务器上的弹幕了。
 
-弹弹play服务器上的弹幕数量不够怎么办？这时可以调用 [Related API](https://api.acplay.net/swagger/ui/index#!/Related/Related_GetRealtedAsync)，客户端可以通过`节目编号`获得这个节目在A(acfun)B(bilibili)C(tucao)站上都有哪些对应的网址，从而解析这些网址并加载弹幕。
+弹弹play服务器上的弹幕数量不够怎么办？这时可以调用 [Related API](https://api.dandanplay.net/swagger/ui/index#!/Related/Related_GetRealtedAsync)，客户端可以通过`节目编号`获得这个节目在A(acfun)B(bilibili)C(tucao)站上都有哪些对应的网址，从而解析这些网址并加载弹幕。
 
-从网址解析出弹幕，除了自行编写解析代码，也可以使用 [ExtComment API](https://api.acplay.net/swagger/ui/index#!/Comment/Comment_GetExtCommentAsync)。
+从网址解析出弹幕，除了自行编写解析代码，也可以使用 [ExtComment API](https://api.dandanplay.net/swagger/ui/index#!/Comment/Comment_GetExtCommentAsync)。
 
 最后，当用户发送弹幕时，可以再次调用Comment API。
 
-除此之外，当Match API返回的列表中没有用户心中所想的节目时，仍可通过 [Search API](https://api.acplay.net/swagger/ui/index#!/Search/Search_SearchEpisodesAsync) 指定动画名称手动进行搜索。
+除此之外，当Match API返回的列表中没有用户心中所想的节目时，仍可通过 [Search API](https://api.dandanplay.net/swagger/ui/index#!/Search/Search_SearchEpisodesAsync) 指定动画名称手动进行搜索。
 
 
 ## 二、API使用方式
@@ -37,27 +37,22 @@
 
 请按照API文档的介绍，通过GET/POST等方式连接到网址，如： 
 ```
-GET https://api.acplay.net/api/v1/match?filename=轻音少女10&hash=00000000000000000000000000000000&duration=1500&length=1000
+GET https://api.dandanplay.net/api/v1/match?filename=轻音少女10&hash=00000000000000000000000000000000&duration=1500&length=1000
 ```
 
 ### 3.服务器返回格式
-如果希望服务器返回JSON格式，请在HTTP Header中设置 `Accept: application/json` 。如果希望服务器返回XML格式，请在HTTP Header中设置 `Accept: application/xml` 。同时设置了这两项的情况下服务器将默认使用 `application/xml` 。
 
-如果HTTP Header中未设置 `Accept` 头，服务器将默认使用 `application/json`，但我们不保证将来会一直保持这种设置，所以还是请尽量添加此头信息。
-
-推荐在HTTP Header中设置 `Accept-Encoding: gzip`，服务器将会使用压缩格式返回数据，这样能够有效节省传输的数据量与带宽消耗。目前服务器支持 gzip/deflate 两种压缩方式。
+服务器端近期进行了升级，现在仅支持返回 `application/json` 格式的 JSON 文档。
 
 ### 4.提交数据格式
 
-提交数据时，如果您的数据是JSON格式，请在HTTP Header中设置 `Content-Type: application/json`
+服务器端仅支持 JSON 格式的请求体，提交数据时，请在HTTP Header中设置 `Content-Type: application/json`
 
-提交数据时，如果您的数据是XML格式，请在HTTP Header中设置 `Content-Type: application/xml`
-
-请注意，当前弹弹play API不支持跨域提交。
+当前弹弹play API不支持跨域提交。
 
 ### 5.User-Agent
 
-请在所有请求的 HTTP Header 中附加客户端的 `User-Agent` 便于我们进行数据统计。**对于没有设置 User-Agent 的 API 请求，服务器可能会拒绝返回数据。**
+请在所有请求的 HTTP Header 中附加客户端的 `User-Agent` 便于我们进行数据统计。对于没有设置 User-Agent 的 API 请求，服务器可能会拒绝返回数据。
 
 `User-Agent`的推荐格式为 `AppName/Platform Version`。例如您的APP名称为 dandanplay-test，运行在Android系统上，当前版本号是 1.2.3 ，那么可以设置成 `dandanplay-test/android 1.2.3`。推荐全部使用小写英文和数字，版本号这里请遵循 `major.minor[.build[.revision]]` 格式，例如 1.0、1.2、1.2.3、1.2.3.456 都是正确的版本号。
 
@@ -71,15 +66,17 @@ GET https://api.acplay.net/api/v1/match?filename=轻音少女10&hash=00000000000
 
 ### 1.访问在线接口调试工具
 
-访问 https://api.acplay.net/swagger 点击进入后在上方下拉列表选择v2版本，然后点击右边的Explore按钮刷新API列表。
+访问 https://api.dandanplay.net/swagger 点击进入后在上方下拉列表选择v2版本，然后点击右边的Explore按钮刷新API列表。
 
-API分为**无需验证**和**需要验证**两种，无需验证的API包括获取弹幕、匹配文件等常见功能。需要验证的API会在接口说明文字里面提示。
+API分为**无需验证**和**需要验证**两种，当前大部分弹弹play API 都无需验证即可使用，包括获取弹幕、匹配文件等常见功能。
+
+需要验证的 API 会在接口说明文字里面提示。
 
 
 ### 2.需要验证的API的调用流程
 
 #### 登录
-在你的应用（如网站或是后台脚本等）启动的时候，调用 `POST https://api.acplay.net/api/v2/login` 接口，提交json请求。
+在你的应用（如网站或是后台脚本等）启动的时候，调用 `POST https://api.dandanplay.net/api/v2/login` 接口，提交json请求。
 ```json
 {
  "userName": "你的弹弹play用户名",
@@ -103,13 +100,13 @@ API分为**无需验证**和**需要验证**两种，无需验证的API包括获
 
 搜索API的地址是
 ```
-GET https://api.acplay.net/api/v2/search/anime?keyword=关键词
+GET https://api.dandanplay.net/api/v2/search/anime?keyword=关键词
 ```
 在通过GET调用的时候，需要向HTTP Header中添加一个Authorization头，值为 `“Bearer”+空格+刚才获取的token`。
 
 用Curl来表示的话，类似于
 ```bash
-curl -X GET --header 'Accept:application/json' --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG……(完整的token)''https://api.acplay.net/api/v2/search/anime?keyword=eva'
+curl -X GET --header 'Accept:application/json' --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG……(完整的token)''https://api.dandanplay.net/api/v2/search/anime?keyword=eva'
 ```
  
 
