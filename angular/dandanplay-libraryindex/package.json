@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "^15.2.10",
     "@angular/router": "^15.2.10",
     "dplayer": "^1.26.0",
-    "ng-zorro-antd": "^14.3.0",
+    "ng-zorro-antd": "^15.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
