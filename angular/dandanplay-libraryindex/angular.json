@@ -68,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "dandanplay-libraryindex:build"
+            "buildTarget": "dandanplay-libraryindex:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "dandanplay-libraryindex:build:production"
+              "buildTarget": "dandanplay-libraryindex:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "dandanplay-libraryindex:build"
+            "buildTarget": "dandanplay-libraryindex:build"
           }
         },
         "test": {
