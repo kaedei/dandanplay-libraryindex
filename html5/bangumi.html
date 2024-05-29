@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.WebSiteName - 番剧列表 - @Model.Title</title>
+    <link href="css/bootstrap-5.3.3.min.css" rel="stylesheet">
+    <link href="css/font-awesome-all-6.5.2.min.css" rel="stylesheet">
+    @Partial['style.sshtml'];
+</head>
+
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center my-4">
+            <h1><i class="fas fa-play-circle"></i> @Model.WebSiteName</h1>
+            <a href="index.html" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </header>
+
+        <main>
+            <section>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2>@Model.Title</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" class="form-control" placeholder="搜索番剧标题...">
+                    </div>
+                </div>
+                <div id="loadingIndicator" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <div id="posterGrid" class="poster-grid" style="display: none;">
+                    <!-- 番剧列表将通过JavaScript动态加载 -->
+                </div>
+            </section>
+        </main>
+
+        <!-- 弹窗结构 -->
+        <div id="bangumiModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle"></h2>
+                    <span class="close" onclick="closeModal()">&times;</span>
+                </div>
+                <div id="loading" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <ul id="episodeList" class="episode-list" style="display: none;">
+                </ul>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>@Model.ServerInfo</p>
+        </footer>
+    </div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/bootstrap.bundle-5.3.3.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var bangumiListApi = "@Model.BangumiListApi";
+            var bangumiList = [];
+
+            // 显示 Loading 图标
+            $('#loadingIndicator').show();
+            $('#posterGrid').hide();
+
+            // 调用API获取番剧列表
+            $.ajax({
+                url: bangumiListApi,
+                method: 'GET',
+                success: function (response) {
+                    bangumiList = response;
+                    // 隐藏 Loading 图标
+                    $('#loadingIndicator').hide();
+                    $('#posterGrid').show();
+                    renderBangumiList(bangumiList);
+                },
+                error: function () {
+                    $('#loadingIndicator').html('<p>加载失败，请重试</p>');
+                }
+            });
+
+            // 搜索功能
+            $('#searchInput').on('input', function () {
+                var searchQuery = $(this).val().toLowerCase();
+                var filteredList = bangumiList.filter(function (bangumi) {
+                    return bangumi.Title.toLowerCase().includes(searchQuery);
+                });
+                renderBangumiList(filteredList);
+            });
+        });
+
+        function renderBangumiList(bangumiList) {
+            var posterGrid = $('#posterGrid');
+            posterGrid.empty();
+
+            bangumiList.forEach(function (bangumi) {
+                var posterItem = $('<div></div>')
+                    .addClass('poster-item')
+                    .attr('onclick', `showModal('${bangumi.AnimeId}', '${bangumi.Title}')`);
+
+                var watchedInfo = $('<div></div>')
+                    .addClass('watched-info')
+                    .text(`${bangumi.EpisodeWatched}/${bangumi.EpisodeTotal}`)
+                    .appendTo(posterItem);
+
+                var posterImg = $('<img>')
+                    .attr('src', bangumi.Cover)
+                    .attr('alt', bangumi.Title)
+                    .appendTo(posterItem);
+
+                var posterInfo = $('<div></div>').addClass('poster-info').appendTo(posterItem);
+                var posterTitle = $('<h3></h3>').text(bangumi.Title).appendTo(posterInfo);
+                var posterDetails = $('<p></p>').text(bangumi.Details).appendTo(posterInfo);
+
+                posterGrid.append(posterItem);
+            });
+        }
+
+        function showModal(animeId, title) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('episodeList').style.display = 'none';
+            document.getElementById('bangumiModal').style.display = 'block';
+
+            var getBangumiDetailsApi = "@Model.BangumiDetailsApi".replace('{id}', animeId);
+
+            // 调用API获取番剧详情
+            $.ajax({
+                url: getBangumiDetailsApi,
+                method: 'GET',
+                success: function (response) {
+                    document.getElementById('loading').style.display = 'none';
+                    var episodeList = document.getElementById('episodeList');
+                    episodeList.style.display = 'block';
+                    episodeList.innerHTML = '';
+
+                    response.Episodes.forEach(function (episode) {
+                        var statusIcon = '';
+                        if (episode.AirStatus === 1) {
+                            statusIcon = '<i class="fas fa-check-circle status-icon watched"></i>';
+                        } else if (episode.AirStatus === 0) {
+                            statusIcon = '<i class="fas fa-minus-circle status-icon not-watched"></i>';
+                        } else if (episode.AirStatus === 2) {
+                            statusIcon = '<i class="fas fa-clock status-icon not-aired"></i>';
+                        }
+
+                        var li = document.createElement('li');
+                        li.className = 'episode-item';
+                        li.innerHTML = `
+                    <div class="episode-title">
+                        ${statusIcon}
+                        <i class="fas fa-tv"></i>
+                        ${episode.EpisodeNumber} - ${episode.EpisodeTitle}
+                    </div>
+                    <div class="episode-details">
+                        <div><i class="fas fa-calendar-alt"></i> 上映日期: ${new Date(episode.AirDate).toLocaleDateString()}</div>
+                        <div><i class="fas fa-clock"></i> 上次观看时间: ${episode.LastWatched ? new Date(episode.LastWatched).toLocaleString() : 'N/A'}</div>
+                        <div><i class="fas fa-cloud"></i> 上次观看时间（云端）: ${episode.LastWatchedCloud ? new Date(episode.LastWatchedCloud).toLocaleString() : 'N/A'}</div>
+                    </div>
+                    <div class="local-files">
+                        ${episode.LocalMatchedFiles.map(file => `<a href="video.html?id=${file.Id}" target="_blank"><i class="fas fa-file-video"></i> ${file.Name}</a>`).join('')}
+                    </div>
+                `;
+                        episodeList.appendChild(li);
+                    });
+                },
+                error: function () {
+                    document.getElementById('loading').innerText = '加载失败，请重试';
+                }
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('bangumiModal').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('bangumiModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
