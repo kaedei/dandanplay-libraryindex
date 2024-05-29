@@ -71,7 +71,7 @@
                 <div class="row">
                     @Each.LocalFolderNames
                     <div class="col-6 col-md-3 icon-item">
-                        <a href="filelist.html?type=local&path=@!Current" class="btn btn-outline-primary">
+                        <a href="filelist.html?type=local&name=@!Current" class="btn btn-outline-primary">
                             <i class="fas fa-folder-open"></i>
                             <div>@Current</div>
                         </a>
@@ -87,7 +87,7 @@
                 <div class="row">
                     @Each.RemoteFolderNames
                     <div class="col-6 col-md-3 icon-item">
-                        <a href="filelist.html?type=remote&path=@!Current" class="btn btn-outline-primary">
+                        <a href="filelist.html?type=remote&name=@!Current" class="btn btn-outline-primary">
                             <i class="fas fa-network-wired"></i>
                             <div>@Current</div>
                         </a>
@@ -101,19 +101,19 @@
                 <h2>其他文件</h2>
                 <div class="row">
                     <div class="col-6 col-md-3 icon-item">
-                        <a href="filelist.html?type=nav&path=lastaddfiles" class="btn btn-outline-primary">
+                        <a href="filelist.html?type=nav&name=lastaddfiles" class="btn btn-outline-primary">
                             <i class="fas fa-file-import"></i>
                             <div>最近收录</div>
                         </a>
                     </div>
                     <div class="col-6 col-md-3 icon-item">
-                        <a href="filelist.html?type=nav&path=unmatched" class="btn btn-outline-primary">
+                        <a href="filelist.html?type=nav&name=unmatched" class="btn btn-outline-primary">
                             <i class="fas fa-question-circle"></i>
                             <div>未识别</div>
                         </a>
                     </div>
                     <div class="col-6 col-md-3 icon-item">
-                        <a href="filelist.html?type=nav&path=standalone" class="btn btn-outline-primary">
+                        <a href="filelist.html?type=nav&name=standalone" class="btn btn-outline-primary">
                             <i class="fas fa-file-alt"></i>
                             <div>独立文件</div>
                         </a>

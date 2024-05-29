@@ -37,6 +37,10 @@
         font-size: 0.875rem;
     }
 
+    .page-title {
+        word-break: break-all;
+    }
+
     .icon-item {
         text-align: center;
         margin-bottom: 1rem;
@@ -70,7 +74,10 @@
         background-color: rgba(#f8f9fa 0.9);
         border-radius: 8px;
     }
+</style>
 
+<!-- bangumi.html -->
+<style>
     .poster-grid {
         display: flex;
         flex-wrap: wrap;
@@ -316,6 +323,101 @@
         .episode-details div {
             margin-right: 0;
             margin-top: 0.25rem;
+        }
+    }
+</style>
+
+<!-- filelist.html -->
+<style>
+    .file-item {
+        position: relative;
+        flex: 1 1 calc(25% - 1rem); /* 调整宽度使其一行可放下四个 */
+        max-width: calc(25% - 1rem); /* 调整宽度使其一行可放下四个 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 1rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        padding: 0.5rem; /* 缩小卡片内部间距 */
+    }
+
+    .file-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .file-item .thumbnail {
+        position: relative;
+        width: 100%;
+        height: 120px; /* 调整缩略图高度 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .file-item img {
+        width: 100%;
+        height: 120px; /* 调整缩略图高度 */
+        object-fit: cover;
+    }
+
+    .file-item .file-description {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        border-bottom-left-radius: 8px;
+    }
+
+    .file-item .file-extension {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        border-bottom-right-radius: 8px;
+    }
+
+    .file-item h3 {
+        font-size: 0.875rem; /* 缩小字体 */
+        margin: 0.5rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        word-break: break-all;
+    }
+
+    .file-item p {
+        font-size: 0.75rem; /* 缩小字体 */
+        color: #666;
+        margin: 0.25rem 0 0;
+    }
+
+    @media (max-width: 768px) {
+        .file-item {
+            flex: 1 1 calc(33.33% - 1rem);
+            max-width: calc(33.33% - 1rem);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .file-item {
+            flex: 1 1 calc(50% - 1rem);
+            max-width: calc(50% - 1rem);
         }
     }
 </style>

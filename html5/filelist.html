@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.WebSiteName - 文件列表 - @Model.Title</title>
+    <link href="css/bootstrap-5.3.3.min.css" rel="stylesheet">
+    <link href="css/font-awesome-all-6.5.2.min.css" rel="stylesheet">
+    @Partial['style.sshtml'];
+</head>
+
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center my-4">
+            <h1><i class="fas fa-folder"></i> @Model.WebSiteName</h1>
+            <a href="index.html" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </header>
+
+        <main>
+            <section>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="page-title">@!Model.Title</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" class="form-control" placeholder="搜索文件...">
+                    </div>
+                </div>
+                <div id="loadingIndicator" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <div id="fileGrid" class="poster-grid" style="display: none;">
+                    <!-- 文件列表将通过JavaScript动态加载 -->
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>@Model.ServerInfo</p>
+        </footer>
+    </div>
+
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script src="js/bootstrap.bundle-5.3.3.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var fileListApi = "@Model.FileListApi";
+            var currentPath = decodeURIComponent(new URLSearchParams(window.location.search).get('path') || "");
+            var fileList = [];
+
+            // 显示 Loading 图标
+            $('#loadingIndicator').show();
+            $('#fileGrid').hide();
+
+            function loadFileList(path) {
+                currentPath = path;  // 设置当前路径
+                var apiUrl = fileListApi.replace("{path}", encodeURIComponent(path));
+
+                // 调用API获取文件列表
+                $.ajax({
+                    url: apiUrl,
+                    method: 'GET',
+                    success: function (response) {
+                        fileList = response.Files;
+                        // 隐藏 Loading 图标
+                        $('#loadingIndicator').hide();
+                        $('#fileGrid').show();
+                        renderFileList(fileList);
+                    },
+                    error: function () {
+                        $('#loadingIndicator').html('<p>加载失败，请重试</p>');
+                    }
+                });
+            }
+
+            // 初始加载文件列表
+            loadFileList(currentPath);
+
+            // 搜索功能
+            $('#searchInput').on('input', function () {
+                var searchQuery = $(this).val().toLowerCase();
+                var filteredList = fileList.filter(function (file) {
+                    return file.Name.toLowerCase().includes(searchQuery);
+                });
+                renderFileList(filteredList);
+            });
+
+            function renderFileList(fileList) {
+                var fileGrid = $('#fileGrid');
+                fileGrid.empty();
+
+                fileList.forEach(function (file) {
+                    var fileItem = $('<div></div>')
+                        .addClass('file-item')
+                        .attr('onclick', `handleFileClick('${encodeURIComponent(file.FullPath)}', ${file.IsShortcut}, ${file.IsDirectory}, '${file.Id}')`);
+
+                    if (file.IsShortcut) {
+                        var thumbnail = $('<div></div>')
+                            .addClass('thumbnail')
+                            .appendTo(fileItem);
+
+                        $('<i></i>')
+                            .addClass('fas fa-arrow-circle-up')
+                            .css('font-size', '48px')
+                            .appendTo(thumbnail);
+
+                        $('<h3></h3>')
+                            .text(file.Name)
+                            .appendTo(fileItem);
+                    } else if (file.IsDirectory) {
+                        var thumbnail = $('<div></div>')
+                            .addClass('thumbnail')
+                            .appendTo(fileItem);
+
+                        $('<i></i>')
+                            .addClass('fas fa-folder')
+                            .css('font-size', '48px')
+                            .appendTo(thumbnail);
+
+                        $('<h3></h3>')
+                            .text(file.Name)
+                            .appendTo(fileItem);
+
+                        $('<p></p>')
+                            .text(file.Description || '')
+                            .appendTo(fileItem);
+                    } else {
+                        var thumbnail = $('<div></div>')
+                            .addClass('thumbnail')
+                            .appendTo(fileItem);
+
+                        $('<img>')
+                            .attr('src', `image/${file.Id}`)
+                            .attr('alt', file.Name)
+                            .appendTo(thumbnail);
+
+                        $('<span></span>')
+                            .addClass('file-extension')
+                            .text(file.Extension)
+                            .appendTo(thumbnail);
+
+                        $('<span></span>')
+                            .addClass('file-description')
+                            .text(file.Description || '')
+                            .appendTo(thumbnail);
+
+                        $('<h3></h3>')
+                            .html((file.LastPlay ? '<i class="fas fa-check-circle" style="color: green; margin-right: 5px;"></i>' : '') + file.Name)
+                            .appendTo(fileItem);
+
+                        $('<p></p>')
+                            .text(file.AnimeTitle ? file.AnimeTitle + ' ' : '')
+                            .appendTo(fileItem);
+
+                        $('<p></p>')
+                            .text(file.EpisodeTitle ? file.EpisodeTitle + ' ' : '')
+                            .appendTo(fileItem);
+                    }
+
+                    fileGrid.append(fileItem);
+                });
+            }
+
+            window.handleFileClick = function (encodedFullPath, isShortcut, isDirectory, fileId) {
+                var fullPath = decodeURIComponent(encodedFullPath);
+                if (isShortcut && fullPath === "..") {
+                    window.history.back();
+                } else if (isDirectory) {
+                    var params = new URLSearchParams(window.location.search);
+                    var type = params.get('type');
+                    var name = params.get('name');
+                    var newUrl = `filelist.html?type=${type}&name=${encodeURIComponent(name)}&path=${encodeURIComponent(fullPath)}`;
+                    window.location.href = newUrl;
+                } else {
+                    window.open(`video.html?id=${fileId}`, '_blank');
+                }
+            };
+        });
+    </script>
+
+</body>
+
+</html>
