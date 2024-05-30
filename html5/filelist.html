@@ -22,7 +22,7 @@
         <main>
             <section>
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="page-title">@!Model.Title</h2>
+                    <h3 class="page-title">@!Model.Title</h3>
                     <div class="search-bar">
                         <input type="text" id="searchInput" class="form-control" placeholder="搜索文件...">
                     </div>
@@ -64,13 +64,17 @@
                     method: 'GET',
                     success: function (response) {
                         fileList = response.Files;
-                        // 隐藏 Loading 图标
-                        $('#loadingIndicator').hide();
-                        $('#fileGrid').show();
-                        renderFileList(fileList);
+                        if (fileList.length === 0) {
+                            $('#loadingIndicator').html('<p>加载失败或列表为空，<a href="javascript:location.reload()">请重试</a></p>');
+                        } else {
+                            // 隐藏 Loading 图标
+                            $('#loadingIndicator').hide();
+                            $('#fileGrid').show();
+                            renderFileList(fileList);
+                        }
                     },
                     error: function () {
-                        $('#loadingIndicator').html('<p>加载失败，请重试</p>');
+                        $('#loadingIndicator').html('<p>加载失败，<a href="javascript:location.reload()">请重试</a></p>');
                     }
                 });
             }
@@ -132,7 +136,7 @@
                             .appendTo(fileItem);
 
                         $('<img>')
-                            .attr('src', `image/${file.Id}`)
+                            .attr('src', file.ImageUrl)
                             .attr('alt', file.Name)
                             .appendTo(thumbnail);
 
@@ -148,6 +152,7 @@
 
                         $('<h3></h3>')
                             .html((file.LastPlay ? '<i class="fas fa-check-circle" style="color: green; margin-right: 5px;"></i>' : '') + file.Name)
+                            .attr('title', file.Name)
                             .appendTo(fileItem);
 
                         $('<p></p>')

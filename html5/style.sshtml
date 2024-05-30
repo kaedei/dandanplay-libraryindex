@@ -365,6 +365,10 @@
         width: 100%;
         height: 120px; /* 调整缩略图高度 */
         object-fit: cover;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
 
     .file-item .file-description {
