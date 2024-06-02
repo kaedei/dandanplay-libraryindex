@@ -82,7 +82,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
-        justify-content: center;
+        justify-content: left;
     }
 
     .watched-info {
@@ -98,7 +98,7 @@
 
     .poster-item {
         position: relative;
-        flex: 1 1 calc(16.66% - 1rem);
+        flex: 0 1 calc(16.66% - 1rem);
         max-width: calc(16.66% - 1rem);
         display: flex;
         flex-direction: column;
@@ -325,14 +325,78 @@
             margin-top: 0.25rem;
         }
     }
+
+    /* GroupName 样式 */
+    .group-name {
+        font-size: 1.2rem;
+        margin: 0.5rem 0 0 0;
+        width: 100%;
+    }
+
+    /* 快速定位菜单栏样式 */
+    .quick-nav {
+        position: fixed;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .quick-nav a {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        color: #333;
+        text-decoration: none;
+        font-size: 0.875rem;
+    }
+
+    .quick-nav a:hover {
+        text-decoration: underline;
+    }
+
+    .quick-nav i {
+        margin-right: 0.5rem;
+    }
+
+    /* 收起-展开按钮样式 */
+    .quick-nav-toggle {
+        position: fixed;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.5rem;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        z-index: 1001;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .quick-nav.collapsed {
+        display: none;
+    }
+
+    .quick-nav.collapsed ~ .quick-nav-toggle {
+        display: flex;
+    }
 </style>
 
 <!-- filelist.html -->
 <style>
     .file-item {
         position: relative;
-        flex: 1 1 calc(25% - 1rem); /* 调整宽度使其一行可放下四个 */
-        max-width: calc(25% - 1rem); /* 调整宽度使其一行可放下四个 */
+        flex: 1 1 calc(25% - 1rem);
+        max-width: calc(25% - 1rem);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -344,7 +408,7 @@
         overflow: hidden;
         transition: transform 0.2s, box-shadow 0.2s;
         cursor: pointer;
-        padding: 0.5rem; /* 缩小卡片内部间距 */
+        padding: 0.5rem;
     }
 
     .file-item:hover {
@@ -355,7 +419,7 @@
     .file-item .thumbnail {
         position: relative;
         width: 100%;
-        height: 120px; /* 调整缩略图高度 */
+        height: 120px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -363,7 +427,7 @@
 
     .file-item img {
         width: 100%;
-        height: 120px; /* 调整缩略图高度 */
+        height: 120px;
         object-fit: cover;
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
@@ -394,7 +458,7 @@
     }
 
     .file-item h3 {
-        font-size: 0.875rem; /* 缩小字体 */
+        font-size: 0.875rem;
         margin: 0.5rem;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -406,7 +470,7 @@
     }
 
     .file-item p {
-        font-size: 0.75rem; /* 缩小字体 */
+        font-size: 0.75rem;
         color: #666;
         margin: 0.25rem 0 0;
     }

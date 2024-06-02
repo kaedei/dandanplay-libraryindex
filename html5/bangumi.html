@@ -12,7 +12,7 @@
 
 <body>
     <div class="container">
-        <header class="d-flex justify-content-between align-items-center my-4">
+        <header class="d-flex justify-content-between align-items-center mb-4">
             <h1><i class="fas fa-play-circle"></i> @Model.WebSiteName</h1>
             <a href="index.html" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left"></i> 返回首页
@@ -52,8 +52,25 @@
         </div>
 
         <footer class="footer">
-            <p>@Model.ServerInfo</p>
+            <p>
+                @IfNot.IsAnonymous
+                当前用户: @Model.UserName
+                <a href="/web1/logout" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </a> |
+                @EndIf
+                @Model.ServerInfo
+            </p>
         </footer>
+    </div>
+
+    <div id="quickNavContainer">
+        <div id="quickNav" class="quick-nav">
+            <!-- 这里将通过JavaScript动态生成 -->
+        </div>
+        <div id="quickNavToggle" class="quick-nav-toggle">
+            <i class="fas fa-angle-right"></i>
+        </div>
     </div>
 
     <script src="js/jquery-3.7.1.min.js"></script>
@@ -78,6 +95,7 @@
                     $('#loadingIndicator').hide();
                     $('#posterGrid').show();
                     renderBangumiList(bangumiList);
+                    renderQuickNav(bangumiList);
                 },
                 error: function () {
                     $('#loadingIndicator').html('<p>加载失败，请重试</p>');
@@ -92,33 +110,86 @@
                 });
                 renderBangumiList(filteredList);
             });
+
+            // 收起-展开按钮逻辑
+            $('#quickNavToggle').click(function () {
+                $('#quickNav').toggleClass('collapsed');
+                var icon = $('#quickNavToggle i');
+                if ($('#quickNav').hasClass('collapsed')) {
+                    icon.removeClass('fa-angle-right').addClass('fa-angle-left');
+                } else {
+                    icon.removeClass('fa-angle-left').addClass('fa-angle-right');
+                }
+            });
         });
 
         function renderBangumiList(bangumiList) {
             var posterGrid = $('#posterGrid');
             posterGrid.empty();
 
+            // 按 GroupName 分组
+            var groupedBangumi = {};
             bangumiList.forEach(function (bangumi) {
-                var posterItem = $('<div></div>')
-                    .addClass('poster-item')
-                    .attr('onclick', `showModal('${bangumi.AnimeId}', '${bangumi.Title}')`);
-
-                var watchedInfo = $('<div></div>')
-                    .addClass('watched-info')
-                    .text(`${bangumi.EpisodeWatched}/${bangumi.EpisodeTotal}`)
-                    .appendTo(posterItem);
-
-                var posterImg = $('<img>')
-                    .attr('src', bangumi.Cover)
-                    .attr('alt', bangumi.Title)
-                    .appendTo(posterItem);
-
-                var posterInfo = $('<div></div>').addClass('poster-info').appendTo(posterItem);
-                var posterTitle = $('<h3></h3>').text(bangumi.Title).attr("title",bangumi.Title).appendTo(posterInfo);
-                var posterDetails = $('<p></p>').text(bangumi.Details).appendTo(posterInfo);
-
-                posterGrid.append(posterItem);
+                var groupName = bangumi.GroupName || '未分组';
+                if (!groupedBangumi[groupName]) {
+                    groupedBangumi[groupName] = [];
+                }
+                groupedBangumi[groupName].push(bangumi);
             });
+
+            // 生成分组显示
+            for (var groupName in groupedBangumi) {
+                var groupHeader = $('<h3></h3>')
+                    .addClass('group-name')
+                    .text(groupName)
+                    .attr('id', 'group-' + groupName);
+                posterGrid.append(groupHeader);
+
+                groupedBangumi[groupName].forEach(function (bangumi) {
+                    var posterItem = $('<div></div>')
+                        .addClass('poster-item')
+                        .attr('onclick', `showModal('${bangumi.AnimeId}', '${bangumi.Title}')`);
+
+                    var watchedInfo = $('<div></div>')
+                        .addClass('watched-info')
+                        .text(`${bangumi.EpisodeWatched}/${bangumi.EpisodeTotal}`)
+                        .appendTo(posterItem);
+
+                    var posterImg = $('<img>')
+                        .attr('src', bangumi.Cover)
+                        .attr('alt', bangumi.Title)
+                        .appendTo(posterItem);
+
+                    var posterInfo = $('<div></div>').addClass('poster-info').appendTo(posterItem);
+                    var posterTitle = $('<h3></h3>').text(bangumi.Title).attr("title", bangumi.Title).appendTo(posterInfo);
+                    var posterDetails = $('<p></p>').text(bangumi.Details).appendTo(posterInfo);
+
+                    posterGrid.append(posterItem);
+                });
+            }
+        }
+
+        function renderQuickNav(bangumiList) {
+            var quickNav = $('#quickNav');
+            quickNav.empty();
+
+            // 按 GroupName 分组
+            var groupedBangumi = {};
+            bangumiList.forEach(function (bangumi) {
+                var groupName = bangumi.GroupName || '未分组';
+                if (!groupedBangumi[groupName]) {
+                    groupedBangumi[groupName] = [];
+                }
+                groupedBangumi[groupName].push(bangumi);
+            });
+
+            // 生成快速定位链接
+            for (var groupName in groupedBangumi) {
+                var navLink = $('<a></a>')
+                    .attr('href', '#group-' + groupName)
+                    .html(`<i class="fas fa-angle-right"></i> ${groupName} `);
+                quickNav.append(navLink);
+            }
         }
 
         function showModal(animeId, title) {

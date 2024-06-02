@@ -1,131 +1,125 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-	<title>弹弹play媒体库</title>
+	<title>@Model.WebSiteName</title>
 	<meta charset="UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="shortcut icon" href="css/icon.png" type="image/x-icon" />
-	<script src="js/bootstrap-4.0.0.js"></script>
-	<script src="js/jquery-3.2.1.min.js"></script>
-	<script src="js/fontawesome-5.5.0.js"></script>
-	<link rel="stylesheet" href="css/bootstrap-4.0.0.css" />
+	<link href="css/bootstrap-5.3.3.min.css" rel="stylesheet">
+	<link href="css/font-awesome-all-6.5.2.min.css" rel="stylesheet">
+	@Partial['style.sshtml'];
 	<style type="text/css">
-		html, body {
-			background-image: url(@Model.Background);
-			background-size: cover;
-			background-repeat: no-repeat;
-			height: 100%;
+		.login-container {
+			background: rgba(255, 255, 255, 0.8);
+			padding: 3rem 2rem;
+			border-radius: 8px;
+			box-shadow: 0 12px 12px rgba(0, 0, 0, 0.3);
+			max-width: 400px;
+			width: 100%;
+			text-align: center;
 		}
 
-		.container {
-			height: 100%;
-			align-content: center;
+		.login-container h4 {
+			margin-bottom: 1.5rem;
+			color: #333;
 		}
 
-		.card {
-			height: 350px;
-			margin-top: auto;
-			margin-bottom: auto;
-			width: 400px;
-			background-color: rgba(0,0,0,0.5) !important;
+		.input-group {
+			margin-bottom: 1rem;
 		}
 
-		.card-header h4 {
-			margin-top: 20px;
+		.input-group-text {
+			background-color: #376ea9;
+			/* 更改为蓝色 */
 			color: white;
+			border: none;
 		}
 
-		.input-group-prepend span {
-			width: 40px;
-/* ReSharper disable once InvalidValue */
-			background-color: @Model.Color;;
-			color: white;
-			border: 0 !important;
+		.form-control {
+			border: 1px solid #ddd;
+			border-radius: 0 4px 4px 0;
 		}
 
-		input:focus {
-			outline: 0 !important;
-			box-shadow: 0 0 0 0 !important;
+		.form-control:focus {
+			border-color: #376ea9;
+			/* 更改为蓝色 */
+			box-shadow: none;
 		}
 
 		.remember {
-			color: white;
+			display: flex;
+			align-items: right;
+			justify-content: start;
+			color: #333;
+			margin-bottom: 1rem;
 		}
 
 		.remember input {
-			width: 20px;
-			height: 20px;
-			margin-left: 15px;
-			margin-right: 5px;
+			margin-right: 0.5rem;
 		}
 
-		.login_btn {
+		.login-btn {
+			background-color: #376ea9;
 			color: white;
-			/* ReSharper disable once InvalidValue */
-			background-color: @Model.Color;;
-			width: 100px;
+			border: none;
+			padding: 0.5rem 1rem;
+			border-radius: 4px;
+			width: 100%;
+			cursor: pointer;
 		}
 
-		.login_btn:hover {
-			color: black;
-			background-color: white;
+		.login-btn:hover {
+			background-color: #5894d3;
 		}
 
 		.links {
-			color: white;
+			font-size: 0.8rem;
+			margin-top: 1rem;
+			word-break: break-all;
 		}
 
 		.links a {
-			margin-left: 4px;
+			color: #376ea9;
+			text-decoration: none;
+		}
+
+		.links a:hover {
+			text-decoration: underline;
+		}
+
+		.error-message {
+			color: red;
+			margin-top: 1rem;
 		}
 	</style>
 </head>
+
 <body>
-	<div class="container">
-		<div class="d-flex justify-content-center h-100">
-			<div class="card">
-				<div class="card-header text-right">
-					<h4>登录弹弹play媒体库</h4>
-				</div>
-				<div class="card-body">
-					<form method="post">
-						<div class="input-group form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fas fa-user"></i></span>
-							</div>
-							<input type="text" name="Username" class="form-control" placeholder="用户名" required />
-						</div>
-						<div class="input-group form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text"><i class="fas fa-key"></i></span>
-							</div>
-							<input type="password" name="Password" class="form-control" placeholder="密码" required/>
-						</div>
-						<div class="row align-items-center remember">
-							<input type="checkbox" name="RememberMe" id="RememberMe"/>
-							<label for="RememberMe">
-								记住我
-							</label>
-						</div>
-						<div class="form-group">
-							<input type="submit" value="登录" class="btn float-right login_btn" />
-						</div>
-					</form>
-				</div>
-				@If.Error
-				<div class="card-footer">
-					<p class="d-flex justify-content-center text-danger">用户名或密码错误</p>
-					<!--<div class="d-flex justify-content-center links">
-						没有账号？<a href="#">注册</a>
-					</div>
-					<div class="d-flex justify-content-center">
-						<a href="#">忘记密码？</a>
-					</div>-->
-				</div>
-				@EndIf
+	<div class="login-container">
+		<h4>登录@Model.WebSiteName</h4>
+		<form method="post">
+			<div class="input-group">
+				<span class="input-group-text"><i class="fas fa-user"></i></span>
+				<input type="text" name="Username" class="form-control" placeholder="用户名" required />
 			</div>
+			<div class="input-group">
+				<span class="input-group-text"><i class="fas fa-key"></i></span>
+				<input type="password" name="Password" class="form-control" placeholder="密码" required />
+			</div>
+			<div class="remember">
+				<input type="checkbox" name="RememberMe" id="RememberMe" />
+				<label for="RememberMe">记住我</label>
+			</div>
+			<button type="submit" class="login-btn">登录</button>
+		</form>
+		@If.Error
+		<div class="error-message">
+			用户名或密码错误
 		</div>
+		@EndIf
 	</div>
 </body>
+
 </html>

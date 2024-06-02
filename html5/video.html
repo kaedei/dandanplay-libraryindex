@@ -8,6 +8,7 @@
     <title>@Model.AnimeTitle - @Model.EpisodeTitle - @Model.WebSiteName</title>
     <link rel="shortcut icon" href="css/icon.png" type="image/x-icon">
     <link href="css/bootstrap-4.0.0.css" rel="stylesheet">
+    <link href="css/font-awesome-all-6.5.2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/DPlayer.min.css">
     <script src="js/DPlayer.min.js"></script>
     <style type="text/css">
@@ -118,16 +119,22 @@
             </div>
         </div>
     </div>
+    
+<hr/>
+<footer class="footer text-center">
+    <p>
+        @IfNot.IsAnonymous
+        当前用户: @Model.UserName
+        <a href="/web1/logout" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-sign-out-alt"></i> 退出登录
+        </a> |
+        @EndIf
+        @Model.ServerInfo
+    </p>
+</footer>
 </div>
 
-<hr/>
-<div class="container">
-    <div class="row text-center">
-        <div class="col-12">
-            <p>@Model.ServerInfo</p>
-        </div>
-    </div>
-</div>
+
 
 <script src="js/jquery-3.2.1.min.js"></script>
 <!--<script src="js/popper.min.js"></script>-->
