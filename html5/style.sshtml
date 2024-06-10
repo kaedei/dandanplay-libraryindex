@@ -81,7 +81,7 @@
     .poster-grid {
         display: flex;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 0.25rem 1rem;
         justify-content: left;
     }
 
@@ -125,26 +125,23 @@
         background: #f0f0f0;
     }
 
-    .poster-item h3,
-    .poster-item p {
-        margin: 0.5rem;
-    }
-
     .poster-item h3 {
         font-size: 1rem;
-        margin-bottom: 0.25rem;
+        margin: 0.25rem;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: normal;
+        word-break:normal;
     }
 
     .poster-item p {
-        font-size: 0.875rem;
+        font-size: 0.8rem;
         color: #666;
         margin-bottom: 0.5rem;
+        word-break: break-all;
     }
 
     @media (max-width: 768px) {
@@ -158,6 +155,13 @@
         .poster-item {
             flex: 1 1 calc(50% - 1rem);
             max-width: calc(50% - 1rem);
+        }
+
+        .poster-item img {
+            width: 100%;
+            height: 75px;
+            object-fit: cover;
+            background: #f0f0f0;
         }
     }
 
@@ -327,14 +331,12 @@
         }
     }
 
-    /* GroupName 样式 */
     .group-name {
         font-size: 1.2rem;
-        margin: 0.5rem 0 0 0;
+        margin: 0.5rem 0;
         width: 100%;
     }
 
-    /* 快速定位菜单栏样式 */
     .quick-nav {
         position: fixed;
         right: 20px;
