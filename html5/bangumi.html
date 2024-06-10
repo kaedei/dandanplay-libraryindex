@@ -75,6 +75,7 @@
 
     <script src="js/jquery-3.7.1.min.js"></script>
     <script src="js/bootstrap.bundle-5.3.3.min.js"></script>
+    <script src="js/lazysizes-5.3.1.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -156,8 +157,9 @@
                         .appendTo(posterItem);
 
                     var posterImg = $('<img>')
-                        .attr('src', bangumi.Cover)
+                        .attr('data-src', bangumi.Cover)
                         .attr('alt', bangumi.Title)
+                        .addClass('lazyload')
                         .appendTo(posterItem);
 
                     var posterInfo = $('<div></div>').addClass('poster-info').appendTo(posterItem);

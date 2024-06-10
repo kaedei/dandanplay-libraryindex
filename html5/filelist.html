@@ -51,6 +51,7 @@
 
     <script src="js/jquery-3.7.1.min.js"></script>
     <script src="js/bootstrap.bundle-5.3.3.min.js"></script>
+    <script src="js/lazysizes-5.3.1.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -144,8 +145,9 @@
                             .appendTo(fileItem);
 
                         $('<img>')
-                            .attr('src', file.ImageUrl)
+                            .attr('data-src', file.ImageUrl)
                             .attr('alt', file.Name)
+                            .addClass('lazyload')
                             .appendTo(thumbnail);
 
                         $('<span></span>')
