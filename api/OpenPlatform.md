@@ -15,6 +15,8 @@
 
 首先，在打开视频文件的时候，客户端应该调用 [Match API](https://api.dandanplay.net/swagger/ui/index#!/Match/Match_MatchAsync)，传递视频文件名、hash、长度、大小之后，服务器端对文件进行识别。Match API会返回一个“此文件最有可能是...”的列表，用户需要在此列表中选择一个最适合的项目。
 
+- Hash计算方式：使用文件前 16MB（16x1024x1024字节）数据计算MD5
+
 客户端将会得到一个`节目编号(EpisodeId)`，请保存此视频文件和此`节目编号`的关联。（`节目编号`表示的是某个动画的某一集，一个`节目编号`可以关联很多个视频，一个视频只能关联到一个`节目编号`。）
 
 之后，客户端就可以通过`节目编号`来调用 [Comment API](https://api.dandanplay.net/swagger/ui/index#!/Comment/Comment_GetAsync) 获取弹弹play服务器上的弹幕了。
@@ -66,11 +68,11 @@ GET https://api.dandanplay.net/api/v1/match?filename=轻音少女10&hash=0000000
 
 ### 1.访问在线接口调试工具
 
-访问 https://api.dandanplay.net/swagger 点击进入后在上方下拉列表选择v2版本，然后点击右边的Explore按钮刷新API列表。
+访问 https://api.dandanplay.net/swagger
 
 API分为**无需验证**和**需要验证**两种，当前大部分弹弹play API 都无需验证即可使用，包括获取弹幕、匹配文件等常见功能。
 
-需要验证的 API 会在接口说明文字里面提示。
+涉及用户自己的操作，例如发送弹幕、添加关注、获取播放历史等 API 都需要验证，需要验证的 API 会在接口说明文字里面提示。
 
 
 ### 2.需要验证的API的调用流程
