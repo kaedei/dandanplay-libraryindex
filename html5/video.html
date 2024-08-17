@@ -10,7 +10,8 @@
     <link href="css/bootstrap-4.0.0.css" rel="stylesheet">
     <link href="css/font-awesome-all-6.5.2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/DPlayer.min.css">
-    <script src="js/DPlayer.min.js"></script>
+    <script src="js/DPlayer-1.27.0.min.js"></script>
+    <script src="js/subtitles-octopus.js"></script>
     <style type="text/css">
         .dplayer {
             width: 100%;
@@ -35,10 +36,6 @@
             -webkit-text-stroke: 0.1px black;
             text-stroke: 0.1px black;
             text-shadow: 1.0px 1.0px 0.5px rgba(0, 0, 0, .5);
-        }
-
-        .dplayer-subtitle {
-            text-shadow: 2px 2px 4px rgb(0 0 0);
         }
 
         /* mobile */
@@ -76,6 +73,7 @@
     </nav>
 
     <div id="dplayer"></div>
+    <!-- <div id="ass-container"></div> -->
 
     @If.HasSubtitle
     <div class="card">
@@ -148,7 +146,6 @@
             screenshot: true, //截图
             hotkey: true, //热键
             preload: 'none', //预加载
-            //logo: 'http://www.dandanplay.com/logo.png',        //播放器左上角logo
             volume: 1, //默认音量
             mutex: true, //互斥，阻止多个播放器同时播放
             video: {
@@ -162,16 +159,18 @@
                 bottom: '15%', //底部距离
                 unlimited: true //无限制
                 //maximum: 60 //最大弹幕
-            },
-            subtitle: {
-                url: '@Model.SubtitleVtt',
-                type: 'webvtt',
-                fontSize: '40px',
-                bottom: '5%',
-                color: '#ffffff'
-            },
+            }
         });
         $(".dplayer-video").attr("crossorigin", "use-credentials");
+
+        var options = {
+            video: document.getElementsByClassName('dplayer-video')[0],
+            subUrl: '@Model.SubtitleAss',
+            fonts: ['@Model.SubtitleFont'],
+            workerUrl: 'js/subtitles-octopus-worker.js',
+            legacyWorkerUrl: 'js/subtitles-octopus-worker-legacy.js'
+        };
+        var instance = new SubtitlesOctopus(options);
     });
 </script>
 </body>
