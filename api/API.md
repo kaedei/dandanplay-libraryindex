@@ -111,6 +111,7 @@
 - Position：当前进度，范围0.0-1.0
 - Seekable：当前视频是否支持跳转进度，部分流媒体视频和直播视频不支持跳转
 - Volume：当前播放器声音大小，范围0-100
+- Playing: 视频播放状态，为false时则为暂停
 
 ## 6.获取当前视频的弹幕列表 /api/v1/current/comment
 
