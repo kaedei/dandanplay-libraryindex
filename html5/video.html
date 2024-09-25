@@ -163,9 +163,15 @@
         });
         $(".dplayer-video").attr("crossorigin", "use-credentials");
 
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return r[2]; return null; //返回参数值
+        }
+
         var options = {
             video: document.getElementsByClassName('dplayer-video')[0],
-            subUrl: '@Model.SubtitleAss',
+            subUrl: '/api/v1/subtitle/file/' + getUrlParam('id') + '?fileName=' + getUrlParam('subtitle'),
             fonts: ['@Model.SubtitleFont'],
             workerUrl: 'js/subtitles-octopus-worker.js',
             legacyWorkerUrl: 'js/subtitles-octopus-worker-legacy.js'
