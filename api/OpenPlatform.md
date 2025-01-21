@@ -66,17 +66,11 @@
 - **签名验证模式**
   - **X-AppId**: 您的应用程序 ID。
   - **X-Timestamp**: 当前时间的 Unix 时间戳，单位为秒。
-  - **X-Signature**: 使用 `AppId`、`Timestamp` 和 `AppSecret` 生成的签名。下面会详细介绍。
+  - **X-Signature**: 使用 `AppId`、`AppSecret` 等参数生成的签名。后文会详细介绍。
 
 - **客户端凭证模式**
   - **X-AppId**: 您的应用程序 ID。
   - **X-AppSecret**: 您的应用程序密钥之一。
-
-#### 测试模式（强制启用验证）
-
-请注意，当前弹弹play开放平台未开启对请求头的验证。预计将于2025年1月30日开启强制验证。在此之前，您可以不用在请求头中包含 `X-AppId`、`X-Timestamp` 、 `X-Signature` 和 `X-AppSecret`。但是我们仍然建议您在测试时按照正式环境的要求进行配置，以确保您的应用程序在正式环境中能够正常工作。
-
-我们提供了“**测试模式**”供您提前测试，您可以在 HTTP 头中包含 `X-Auth: 1` 来强制启用请求头验证。在测试模式下，您的请求头中必须按照上述要求包含正确的 `X-AppId`、`X-Timestamp` 、 `X-Signature` 或 `X-AppSecret`。
 
 #### 选择正确的身份验证模式
 
@@ -86,23 +80,36 @@
 
 如果您的应用程序是一个客户端应用（如移动应用、桌面应用、纯前端应用等），我们强烈建议您使用 **签名验证模式**。
 
+#### 测试签名（强制启用验证）
+
+请注意，当前弹弹play开放平台尚未开启对请求头的强制验证。预计将于2025年1月30日后开启强制验证。在此之前，您可以不用在请求头中包含 `X-AppId`、`X-Timestamp` 、 `X-Signature` 和 `X-AppSecret`。但是我们仍然建议您在测试时按照正式环境的要求进行配置，以确保届时您的应用能够正常工作。
+
+开放平台提供了“**测试模式**”供您提前测试，您可以在 HTTP 头中包含 `X-Auth: 1` 来强制启用请求头验证。在测试模式下，您的请求头中必须按照上述要求包含正确的 `X-AppId`、`X-Timestamp` 、 `X-Signature` 或 `X-AppSecret`。
+
 ### 6. 签名验证模式指南
 
 #### 签名生成步骤
 
-1. **获取当前时间戳**：
+1. **获取当前时间戳（Timestamp）**：
 
    - 使用当前的 UTC 时间生成 Unix 时间戳，单位为秒。请确保您的服务器时间或设备时间与标准时间同步，否则可能会导致签名验证失败。
+   - 例如，UTC时间 2025年1月1日 00:00:00 的时间戳应为 1735660800。
 
-2. **计算签名**：
+2. **获取当前访问的 API 路径（Path）**：
 
-    算法为 `base64(sha256(AppId + Timestamp + AppSecret))`
+   - 此处的 API 路径是指 API 地址后的路径部分，以`/`开头，不包括前面的协议、域名和`?`后面的查询参数。
+   - 例如，要访问 `https://api.dandanplay.net/api/v2/comment/123450001?withRelated=true`，则 API 路径应该为 `/api/v2/comment/123450001`。
+   - 建议路径全部使用小写字母，不需要经过 URL 编码。
 
-   - 将 `AppId`、`Timestamp` 和 `AppSecret` 按顺序拼接成一个字符串，区分大小写。
+3. **计算签名**：
+
+    算法为 `base64(sha256(AppId + Timestamp + Path + AppSecret))`
+
+   - 将 `AppId`、`Timestamp`、`Path` 和 `AppSecret` 按顺序拼接成一个字符串，区分大小写。
    - 使用 SHA256 哈希算法对该字符串进行哈希处理。
    - 将生成的哈希结果转换为 Base64 编码格式，作为 `X-Signature` 的值。
 
-3. **发送请求**：
+4. **发送请求**：
 
    - 确保在请求头中包含 `X-AppId`、`X-Signature` 和 `X-Timestamp`。
 
@@ -122,15 +129,16 @@ public class SignatureGenerator {
         String appSecret = "your_app_secret";
 
         long timestamp = new Date().getTime() / 1000;
-        String signature = generateSignature(appId, timestamp, appSecret);
+        String path = "/api/v2/comment/123450001";
+        String signature = generateSignature(appId, timestamp, path, appSecret);
 
         System.out.println("X-AppId: " + appId);
         System.out.println("X-Signature: " + signature);
         System.out.println("X-Timestamp: " + timestamp);
     }
 
-    private static String generateSignature(String appId, long timestamp, String appSecret) {
-        String data = appId + timestamp + appSecret;
+    private static String generateSignature(String appId, long timestamp, String path, String appSecret) {
+        String data = appId + timestamp + path + appSecret;
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(data.getBytes());
@@ -150,16 +158,16 @@ const crypto = require('crypto');
 
 const appId = 'your_app_id';
 const appSecret = 'your_app_secret';
-
+const path = '/api/v2/comment/123450001';
 const timestamp = Math.floor(Date.now() / 1000);
-const signature = generateSignature(appId, timestamp, appSecret);
+const signature = generateSignature(appId, timestamp, path, appSecret);
 
 console.log('X-AppId: ' + appId);
 console.log('X-Signature: ' + signature);
 console.log('X-Timestamp: ' + timestamp);
 
-function generateSignature(appId, timestamp, appSecret) {
-    const data = appId + timestamp + appSecret;
+function generateSignature(appId, timestamp, path, appSecret) {
+    const data = appId + timestamp + path + appSecret;
     return crypto.createHash('sha256').
         update(data).
         digest('base64');
@@ -189,15 +197,15 @@ function generateSignature(appId, timestamp, appSecret) {
   - 签名不匹配。
   - 如果访问任何页面（包括Swagger工具）都返回 403 错误，可能您的IP已被服务器屏蔽
 
-收到 403 错误响应时，请检查请求头是否正确配置，时间戳是否有效，以及签名是否正确计算。具体的错误信息将包含在响应的 `X-Error-Message` 头中：
+  收到 403 错误响应时，请检查请求头是否正确配置，时间戳是否有效，以及签名是否正确计算。具体的错误信息将包含在响应的 `X-Error-Message` 头中：
 
-| X-Error-Message | 说明 |
-| --- | --- |
-| `Missing Authentication Headers` | 缺少必要的身份验证头。 |
-| `Invalid Timestamp` | 时间戳无效或与服务器时间差异过大。 |
-| `Invalid AppId` | 签名验证模式下 `AppId` 或 `AppSecret` 无效。客户端凭证模式下 `AppId` 无效。 |
-| `Invalid Signature` | 签名不匹配。 |
-| `Invalid AppSecret` | 客户端凭证模式下 `AppSecret` 无效。 |
+  | X-Error-Message | 说明 |
+  | --- | --- |
+  | `Missing Authentication Headers` | 缺少必要的身份验证头。 |
+  | `Invalid Timestamp` | 时间戳无效或与服务器时间差异过大。 |
+  | `Invalid AppId` | 签名验证模式下 `AppId` 或 `AppSecret` 无效。客户端凭证模式下 `AppId` 无效。 |
+  | `Invalid Signature` | 签名不匹配。 |
+  | `Invalid AppSecret` | 客户端凭证模式下 `AppSecret` 无效。 |
 
 
 ### 8. 安全注意事项
