@@ -1,5 +1,7 @@
 # 弹弹play开放平台介绍
 
+请开发者加QQ群第一时间获取弹弹play API（服务器状态、API改动）的通知：https://qm.qq.com/q/D2nRsB3mCY
+
 开放平台文档及在线调试工具：https://api.dandanplay.net/swagger
 
 ## 一、介绍
@@ -13,161 +15,208 @@
 
 ### 2.客户端调用流程
 
-首先，在打开视频文件的时候，客户端应该调用 [Match API](https://api.dandanplay.net/swagger/ui/index#!/Match/Match_MatchAsync)，传递视频文件名、hash、长度、大小之后，服务器端对文件进行识别。Match API会返回一个“此文件最有可能是...”的列表，用户需要在此列表中选择一个最适合的项目。
+首先，在打开视频文件的时候，客户端应该调用 **文件识别 API**（`/api/v2/match`），传递视频文件名、hash、长度、大小之后，服务器端对文件进行识别。文件识别 API 会返回一个“此文件可能是...”的列表，用户需要在此列表中选择一个最适合的项目。
 
 - Hash计算方式：使用文件前 16MB（16x1024x1024字节）数据计算MD5
+- 测试视频：此视频前16MB数据的MD5为 `658d05841b9476ccc7420b3f0bb21c3b` 下载地址：http://pan.baidu.com/s/1GNkQE
 
-客户端将会得到一个`节目编号(EpisodeId)`，请保存此视频文件和此`节目编号`的关联。（`节目编号`表示的是某个动画的某一集，一个`节目编号`可以关联很多个视频，一个视频只能关联到一个`节目编号`。）
+客户端将会得到一个`节目编号(episodeId)`，请保存此视频文件和此节目编号的关联。节目编号表示的是某个动画的某一集，一个节目编号可以关联很多个视频，一个视频只能关联到一个节目编号。
 
-之后，客户端就可以通过`节目编号`来调用 [Comment API](https://api.dandanplay.net/swagger/ui/index#!/Comment/Comment_GetAsync) 获取弹弹play服务器上的弹幕了。
+当**文件识别 API**（`/api/v2/match`）返回的列表中没有正确的番剧名称或节目时，仍可通过 **搜索 API**（`/api/v2/search`）搜索番剧名称，进行手动匹配。
 
-弹弹play服务器上的弹幕数量不够怎么办？这时可以调用 [Related API](https://api.dandanplay.net/swagger/ui/index#!/Related/Related_GetRealtedAsync)，客户端可以通过`节目编号`获得这个节目在A(acfun)B(bilibili)C(tucao)站上都有哪些对应的网址，从而解析这些网址并加载弹幕。
+之后，客户端就可以通过`节目编号(episodeId)`来调用 **弹幕 API**（`/api/v2/comment`）获取弹弹play服务器上的弹幕了。
 
-从网址解析出弹幕，除了自行编写解析代码，也可以使用 [ExtComment API](https://api.dandanplay.net/swagger/ui/index#!/Comment/Comment_GetExtCommentAsync)。
+弹弹play服务器上的弹幕数量不够怎么办？这时可以调用 **弹幕关联 API**（`/api/v2/related`），客户端可以通过`节目编号(episodeId)`获得这个节目在其他网站上都有哪些对应的网址（如B站、动画疯等），从而解析这些网址并加载弹幕。
 
-最后，当用户发送弹幕时，可以再次调用Comment API。
+为了从解析出一个外部网址对应的弹幕，除了自行编写解析代码，也可以使用 **外部弹幕 API**（`/api/v2/extcomment`）获取已缓存的弹幕。
 
-除此之外，当Match API返回的列表中没有用户心中所想的节目时，仍可通过 [Search API](https://api.dandanplay.net/swagger/ui/index#!/Search/Search_SearchEpisodesAsync) 指定动画名称手动进行搜索。
+最后，当用户想要发送弹幕时，可以再次调用 **弹幕 API**（`/api/v2/comment`）将弹幕发送到弹弹play服务器上。
 
+## 二、API 接入指南
 
-## 二、API使用方式
+### 1. 概述
 
-### 1.编码方式
-弹弹play API统一使用UTF-8编码。
+本指南旨在帮助第三方开发者正确地集成和使用弹弹play API 服务。弹弹play API v2支持两种身份验证模式：签名验证模式和客户端凭证模式。以下内容将详细介绍如何配置和使用这两种模式。
 
-### 2.HTTP谓词
+### 2. 配置前提
 
-请按照API文档的介绍，通过GET/POST等方式连接到网址，如： 
-```
-GET https://api.dandanplay.net/api/v1/match?filename=轻音少女10&hash=00000000000000000000000000000000&duration=1500&length=1000
-```
+- **API 地址**：当前服务器地址为 `https://api.dandanplay.net`。
+- **AppId 和 AppSecret**：在开始之前，您需要从我们这里获得分配的 `AppId` 和两个 `AppSecret`。
 
-### 3.服务器返回格式
+### 3. 申请 AppId 和 AppSecret
 
-服务器端近期进行了升级，现在仅支持返回 `application/json` 格式的 JSON 文档。
+您可以通过以下方式申请 AppId 和 AppSecret：
 
-### 4.提交数据格式
+1. 发送邮件至 `kaedei@dandanplay.net`，邮件标题为 `弹弹play开放平台申请`，内容包括您的应用名称（中文、英文）、应用描述、应用类型、联系方式、GitHub仓库页面等必要信息。
 
-服务器端仅支持 JSON 格式的请求体，提交数据时，请在HTTP Header中设置 `Content-Type: application/json`
+2. 加入开放平台QQ群，联系管理员并提供上述信息。
 
-当前弹弹play API不支持跨域提交。
+我们将在收到您的申请后尽快处理，并通过邮件或QQ通知您。
 
-### 5.User-Agent
+应用创建成功后，您将获得一个 `AppId` 和两个 `AppSecret`。请妥善保管这些凭证，不要泄露给他人。如果您的凭证丢失或泄露，请立即联系我们。如果我们发现您的凭证被滥用，将会立即停用您的应用。
 
-请在所有请求的 HTTP Header 中附加客户端的 `User-Agent` 便于我们进行数据统计。对于没有设置 User-Agent 的 API 请求，服务器可能会拒绝返回数据。
+### 4. 请求头配置
 
-`User-Agent`的推荐格式为 `AppName/Platform Version`。例如您的APP名称为 dandanplay-test，运行在Android系统上，当前版本号是 1.2.3 ，那么可以设置成 `dandanplay-test/android 1.2.3`。推荐全部使用小写英文和数字，版本号这里请遵循 `major.minor[.build[.revision]]` 格式，例如 1.0、1.2、1.2.3、1.2.3.456 都是正确的版本号。
+弹弹play API 支持使用 **签名验证模式** 或 **客户端凭证模式** 两种客户端的身份验证方式，您可以选择其中一种来验证您的请求。
 
-### 6.测试视频
+所有发往开放平台的请求必须在 HTTP 请求头中包含以下信息：
 
-推荐使用下面的视频测试API有效性，此视频前16MB数据的MD5为  `658d05841b9476ccc7420b3f0bb21c3b`
+#### 签名验证模式
 
-- 下载地址：http://pan.baidu.com/s/1GNkQE
+- **X-AppId**: 您的应用程序 ID。
+- **X-Timestamp**: 当前时间的 Unix 时间戳，单位为秒。
+- **X-Signature**: 使用 `AppId`、`Timestamp` 和 `AppSecret` 生成的签名。下面会详细介绍。
 
-## 三、在线文档和调试工具
+#### 客户端凭证模式
 
-### 1.访问在线接口调试工具
+- **X-AppId**: 您的应用程序 ID。
+- **X-AppSecret**: 您的应用程序密钥之一。
 
-访问 https://api.dandanplay.net/swagger
+### 5. 选择正确的身份验证模式
 
-API分为**无需验证**和**需要验证**两种，当前大部分弹弹play API 都无需验证即可使用，包括获取弹幕、匹配文件等常见功能。
+我们推荐使用 **签名验证模式**，因为它更安全，可以防止您的 `AppSecret` 泄露。
 
-涉及用户自己的操作，例如发送弹幕、添加关注、获取播放历史等 API 都需要验证，需要验证的 API 会在接口说明文字里面提示。
+如果您的应用程序是一个服务器端应用，或者您有能力保护 `AppSecret`，那么可以使用 **客户端凭证模式**。
 
+如果您的应用程序是一个客户端应用（如移动应用、桌面应用、纯前端应用等），我们强烈建议您使用 **签名验证模式**。
 
-### 2.需要验证的API的调用流程
+### 6. 签名验证模式指南
 
-#### 登录
-在你的应用（如网站或是后台脚本等）启动的时候，调用 `POST https://api.dandanplay.net/api/v2/login` 接口，提交json请求。
-```json
-{
- "userName": "你的弹弹play用户名",
- "password": "密码",
- "appId": "应用ID",
- "unixTimestamp": 88888888,
- "hash": "计算出的Hash"
-}
-```
- 
-#### Hash参数的计算方法
+#### 签名生成步骤
 
-将登录请求中 `appId` `password` `unixTimestamp` `userName` 属性的值以及您应用的 `AppSecret` 密钥的值依次拼接起来， 计算出32位MD5（不区分大小写）。举例来说，AppID为dandanplay，AppSecret为FFFFF，用户名为test1，密码为test2，那么计算方法将会是 `hash=MD5(dandanplaytest2666666666test1FFFFF)`。
+1. **获取当前时间戳**：
+   - 使用当前的 UTC 时间生成 Unix 时间戳。
 
-#### 获取token
+2. **计算签名**：
 
-如果登录成功，返回的json中将包括一个 `token` 字段，这个token值就可以用于调用所有需要验证的API（比如首页、关注、搜索等）。这个token的有效期是21天（App开发者登录自己开发的App时有效期为一年），过期前可一直使用，建议把它的值缓存起来或者放到全局变量中，不用每次调用API前都刷新一遍。有效期中可以调用 `/api/v2/login/renew` 接口获取到包含新有效期的token。
+    算法为 `base64(sha256(AppId + Timestamp + AppSecret))`
 
- 
-#### 调用API（以搜索API为例）
+   - 将 `AppId`、`Timestamp` 和 `AppSecret` 按顺序拼接成一个字符串，区分大小写。
+   - 使用 SHA256 哈希算法对该字符串进行哈希处理。
+   - 将生成的哈希结果转换为 Base64 编码格式，作为 `X-Signature` 的值。
 
-搜索API的地址是
-```
-GET https://api.dandanplay.net/api/v2/search/anime?keyword=关键词
-```
-在通过GET调用的时候，需要向HTTP Header中添加一个Authorization头，值为 `“Bearer”+空格+刚才获取的token`。
+3. **发送请求**：
+   - 确保在请求头中包含 `X-AppId`、`X-Signature` 和 `X-Timestamp`。
 
-用Curl来表示的话，类似于
-```bash
-curl -X GET --header 'Accept:application/json' --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbG……(完整的token)''https://api.dandanplay.net/api/v2/search/anime?keyword=eva'
-```
- 
+#### 示例代码
 
-返回的json类似于这样，具体每个字段的含义请参考在线文档
-```json
-{
-  "animes": [
-    {
-      "animeId": 22,
-      "animeTitle": "新世纪福音战士",
-      "type": "tvseries",
-      "typeDescription": "TV动画",
-      "imageUrl": "https://dandanimg.b0.upaiyun.com/anime/22.jpg",
-      "startDate": "1995-10-04T00:00:00",
-      "episodeCount": 26,
-      "isFavorited": false
-    },
-    {
-      "animeId": 202,
-      "animeTitle": "新世纪福音战士 The End of Evangelion",
-      "type": "movie",
-      "typeDescription": "剧场版",
-      "imageUrl": "https://dandanimg.b0.upaiyun.com/anime/202.jpg",
-      "startDate": "1997-07-19T00:00:00",
-      "episodeCount": 1,
-      "isFavorited": true
-    },
-    {
-      "animeId": 4847,
-      "animeTitle": "新世纪福音战士 新剧场版 序",
-      "type": "movie",
-      "typeDescription": "剧场版",
-      "imageUrl": "https://dandanimg.b0.upaiyun.com/anime/4847.jpg",
-      "startDate": "2007-09-01T00:00:00",
-      "episodeCount": 1,
-      "isFavorited": true
-    },
-    {
-      "animeId": 6184,
-      "animeTitle": "EVA爆笑学园",
-      "type": "web",
-      "typeDescription": "网络放送",
-      "imageUrl": "https://dandanimg.b0.upaiyun.com/anime/6184.jpg",
-      "startDate": "2007-03-20T00:00:00",
-      "episodeCount": 24,
-      "isFavorited": false
+以下是一个使用 Java 的示例代码，展示如何生成签名：
+
+```java
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+import java.util.Date;
+
+public class SignatureGenerator {
+    public static void main(String[] args) {
+        String appId = "your_app_id";
+        String appSecret = "your_app_secret";
+
+        long timestamp = new Date().getTime() / 1000;
+        String signature = generateSignature(appId, timestamp, appSecret);
+
+        System.out.println("X-AppId: " + appId);
+        System.out.println("X-Signature: " + signature);
+        System.out.println("X-Timestamp: " + timestamp);
     }
-  ],
-  "errorCode": 0,
-  "success": true,
-  "errorMessage": ""
+
+    private static String generateSignature(String appId, long timestamp, String appSecret) {
+        String data = appId + timestamp + appSecret;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(data.getBytes());
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
 ```
 
-### 3.在在线调试工具中调试需要验证的API
-首先，你需要通过上文所述的各种方式登录后获取到 `token` ，可以通过代码调用的方式获取，也可以使用在线工具手动构建登录请求。
+以下是一个使用 JavaScript 的示例代码，展示如何生成签名：
+
+```javascript
+const crypto = require('crypto');
+
+const appId = 'your_app_id';
+const appSecret = 'your_app_secret';
+
+const timestamp = Math.floor(Date.now() / 1000);
+const signature = generateSignature(appId, timestamp, appSecret);
+
+console.log('X-AppId: ' + appId);
+console.log('X-Signature: ' + signature);
+console.log('X-Timestamp: ' + timestamp);
+
+function generateSignature(appId, timestamp, appSecret) {
+    const data = appId + timestamp + appSecret;
+    return crypto.createHash('sha256').
+        update(data).
+        digest('base64');
+}
+```
+
+### 7. 客户端凭证模式指南
+
+#### 请求步骤
+
+1. **获取 AppId 和 AppSecret**：
+   - 从我们提供的凭证中获取。
+
+2. **发送请求**：
+   - 在请求头中包含 `X-AppId` 和 `X-AppSecret`。
+
+### 8. 错误处理
+
+- **401 Unauthorized**:
+  - 缺少必要的身份验证头。
+
+- **403 Forbidden**: 
+  - 缺少必要的身份验证头。
+  - 时间戳无效或与服务器时间差异过大。
+  - `AppId` 或 `AppSecret` 无效。
+  - 签名不匹配。
+  - 如果访问任何页面（包括Swagger工具）都返回 403 错误，可能您的IP已被服务器屏蔽
+
+在收到错误响应时，请检查请求头是否正确配置，时间戳是否有效，以及签名是否正确计算。具体的错误信息将包含在响应体的 `X-Error-Message` 头中：
+
+| X-Error-Message | 说明 |
+| --- | --- |
+| `Missing Authentication Headers` | 缺少必要的身份验证头。 |
+| `Invalid Timestamp` | 时间戳无效或与服务器时间差异过大。 |
+| `Invalid AppId` | 签名验证模式下 `AppId` 或 `AppSecret` 无效。客户端凭证模式下 `AppId` 无效。 |
+| `Invalid Signature` | 签名不匹配。 |
+| `Invalid AppSecret` | 客户端凭证模式下 `AppSecret` 无效。 |
 
 
-获取到token之后，在页面右上角的文本框中，填写 `Bearer+空格+你的token`：
+### 9. 安全注意事项
 
+- 切勿在客户端应用（如移动应用、桌面应用）中硬编码您的 `AppSecret`。
+- 使用 HTTPS 来确保请求的安全性。
+- 定期更新和保护您的凭证。
 
-然后点击**Explore**按钮，即可进入“已验证”的状态，之后在调用搜索API的时候，在线工具会自动在所有请求的http header中添加Authorization头。
+### 10. API 权限和使用范围说明
+
+当您申请到 `AppId` 和 `AppSecret` 后，就可以使用这些凭证来访问弹弹play API了。但是请注意，您的应用程序只能访问您申请时所描述的使用范围内的 API。如果您需要访问其他 API，或者您的应用程序的使用范围发生了变化，请及时联系我们。
+
+目前弹弹play API中的接口分为两类：**公共接口** 和 **私有接口**。**公共接口**是指不需要身份验证就可以访问的接口，如文件识别、搜索、获取弹幕等。**私有接口**是指需要身份验证（用户登录）才能访问的接口，如关注、播放历史、发送弹幕等。私有接口在Swagger工具的注释中会注明，调用私有接口时需要在 Authorization 头中包含用户的 Jwt Token。
+
+新申请的应用程序默认只能访问公共接口，当前暂不开放私有接口的访问权限。当私有接口开放后，我们将会通过各种方式通知您。
+
+### 11. API 使用约定
+
+- 请按需调用 API，以免对服务器造成过大的负担。
+- 请适当缓存 API 返回的数据，以减少对服务器的请求次数。
+- 请勿滥用 API，包括但不限于恶意刷弹幕、用来爬取数据等。
+- 请勿将 API 用于商业用途，包括但不限于广告、推广等。如果您需要商业合作，请联系我们。
+- 请勿将 API 用于违法、违规，或侵犯他人权益的行为。
+
+当前我们暂不对 API 的调用次数和频率做限制，但是如果我们发现您的应用程序滥用 API，我们将会立即停用您的应用程序。
+
+部分比较消耗服务器资源的接口（如搜索）配置了检测机制，如果检测到您的应用程序过于频繁调用这些接口，程序将自动限制您的访问。如果您确实需要频繁调用这些接口，请联系我们添加白名单。
+
+### 12. 支持
+
+如有任何问题或需要进一步帮助，请加QQ群联系管理员。
