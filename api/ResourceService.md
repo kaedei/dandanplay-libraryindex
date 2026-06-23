@@ -101,6 +101,7 @@
 | subgroup | 字幕组ID                  | 否   | 123          |
 | type     | 资源类别ID                | 否   | 2            |
 | r        | 随机数，用于避免缓存      | 否   | 0.13579      |
+| page     | 搜索结果的页数, 默认是 1      | 否   | 2      |
 
 返回值示例：
 ```json
@@ -171,6 +172,6 @@
 
 接口说明：
 
-参数将通过URL传递，最终的url格式应该类似于 `http://example.com/list?keyword={keyword}&subgroup={subgroupId}&type={typeId}&r={random}`
+参数将通过URL传递，最终的url格式应该类似于 `http://example.com/list?keyword={keyword}&subgroup={subgroupId}&type={typeId}&r={random}&page={page}`
 
 当没有传递 `subgroup` 或 `type` 参数，或者参数数字小于0时，请忽略此参数。
