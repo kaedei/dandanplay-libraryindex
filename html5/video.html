@@ -34,6 +34,43 @@
             background: rgba(255, 255, 255, 0.9);
         }
         @EndIf
+
+        /* 播放进度提示 */
+        .progress-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .progress-alert .btn-close {
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .progress-alert {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                max-width: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -49,6 +86,13 @@
             </li>
         </ol>
     </nav>
+
+    <!-- 播放进度恢复提示 -->
+    <div id="progressAlert" class="alert alert-info alert-dismissible fade show progress-alert" role="alert" style="display: none;">
+        <strong><i class="fas fa-clock"></i> 继续播放</strong>
+        <div id="progressMessage" style="margin-top: 0.5rem; font-size: 0.9rem;"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="关闭"></button>
+    </div>
 
     <div class="player-wrapper">
         <div class="player-main">
@@ -282,6 +326,144 @@
 <script src="js/bootstrap.bundle-5.3.3.min.js"></script>
 <script src="js/video.js?v=@Model.StaticResourceVersion"></script>
 <script>
+    // 播放进度保存功能
+    // 从URL参数获取视频ID（UUID），如果没有则使用服务端模型提供的ID
+    function getVideoId() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var idFromUrl = urlParams.get('id');
+        return idFromUrl || '@Model.Id';
+    }
+    var videoId = getVideoId(); // 视频UUID作为存储键
+    var lastSavedTime = 0; // 上次保存的时间，避免频繁保存
+    
+    // 保存播放进度
+    function savePlayProgress(time) {
+        if (time && time > 0) {
+            try {
+                localStorage.setItem('video_progress_' + videoId, JSON.stringify({
+                    time: time,
+                    timestamp: Date.now()
+                }));
+                lastSavedTime = time;
+            } catch (e) {
+                console.error('保存播放进度失败:', e);
+            }
+        }
+    }
+    
+    // 格式化时间为"X分X秒"
+    function formatTime(seconds) {
+        var minutes = Math.floor(seconds / 60);
+        var secs = Math.floor(seconds % 60);
+        if (minutes > 0) {
+            return minutes + '分' + secs + '秒';
+        } else {
+            return secs + '秒';
+        }
+    }
+    
+    // 格式化日期时间
+    function formatDateTime(timestamp) {
+        var date = new Date(timestamp);
+        var now = new Date();
+        var diff = now - date;
+        
+        // 如果是今天
+        if (date.toDateString() === now.toDateString()) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            return '今天 ' + (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+        }
+        
+        // 如果是昨天
+        var yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+        if (date.toDateString() === yesterday.toDateString()) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            return '昨天 ' + (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+        }
+        
+        // 如果是一周内
+        if (diff < 7 * 24 * 60 * 60 * 1000) {
+            var days = Math.floor(diff / (24 * 60 * 60 * 1000));
+            return days + '天前';
+        }
+        
+        // 其他情况显示完整日期
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        return year + '-' + (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day + ' ' + 
+               (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+    }
+    
+    // 获取保存的播放进度（返回包含时间和时间戳的对象）
+    function getSavedProgress() {
+        try {
+            var saved = localStorage.getItem('video_progress_' + videoId);
+            if (saved) {
+                var progress = JSON.parse(saved);
+                // 如果保存的时间超365天，清除记录
+                if (Date.now() - progress.timestamp > 365 * 24 * 60 * 60 * 1000) {
+                    localStorage.removeItem('video_progress_' + videoId);
+                    return null;
+                }
+                return {
+                    time: progress.time,
+                    timestamp: progress.timestamp
+                };
+            }
+        } catch (e) {
+            console.error('读取播放进度失败:', e);
+        }
+        return null;
+    }
+    
+    // 显示播放进度恢复提示
+    function showProgressAlert(time, timestamp) {
+        var message = '从 <strong>' + formatTime(time) + '</strong> 继续播放';
+        if (timestamp) {
+            message += '<br><small style="color: #6c757d;">上次播放: ' + formatDateTime(timestamp) + '</small>';
+        }
+        document.getElementById('progressMessage').innerHTML = message;
+        var alert = document.getElementById('progressAlert');
+        alert.style.display = 'block';
+        
+        // 5秒后自动隐藏
+        setTimeout(function() {
+            if (alert) {
+                $(alert).fadeOut(300, function() {
+                    alert.style.display = 'none';
+                });
+            }
+        }, 5000);
+    }
+    
+    // 恢复播放进度
+    function restorePlayProgress(dp) {
+        var savedProgress = getSavedProgress();
+        if (savedProgress && savedProgress.time > 5) { // 如果保存的进度大于5秒，才恢复
+            // 等待视频元数据加载完成
+            dp.on('loadedmetadata', function() {
+                var duration = dp.video.duration;
+                var savedTime = savedProgress.time;
+                // 如果保存的时间接近视频结尾（最后5%），不恢复
+                if (savedTime < duration * 0.95) {
+                    dp.seek(savedTime);
+                    console.log('已恢复播放进度至: ' + Math.floor(savedTime) + ' 秒');
+                    // 显示提示信息
+                    showProgressAlert(savedTime, savedProgress.timestamp);
+                } else {
+                    // 如果接近结尾，清除保存的进度
+                    localStorage.removeItem('video_progress_' + videoId);
+                }
+            });
+        }
+    }
+
     $(document).ready(function () {
         var dp = new DPlayer({
             container: document.getElementById('dplayer'),
@@ -314,6 +496,45 @@
             legacyWorkerUrl: 'js/subtitles-octopus-worker-legacy.js'
         };
         var instance = new SubtitlesOctopus(options);
+        
+        // 恢复播放进度
+        restorePlayProgress(dp);
+        
+        // 监听播放时间更新，每5秒保存一次进度
+        dp.on('timeupdate', function() {
+            var currentTime = dp.video.currentTime;
+            // 每5秒保存一次进度（正常播放或用户跳转时都会触发）
+            var timeDiff = Math.abs(currentTime - lastSavedTime);
+            if (timeDiff >= 5) {
+                savePlayProgress(currentTime);
+            }
+        });
+        
+        // 视频播放结束时，清除保存的进度
+        dp.on('ended', function() {
+            localStorage.removeItem('video_progress_' + videoId);
+            console.log('视频播放完成，已清除播放进度');
+        });
+        
+        // 页面关闭前保存进度
+        window.addEventListener('beforeunload', function() {
+            if (dp && dp.video) {
+                var currentTime = dp.video.currentTime;
+                if (currentTime > 0) {
+                    savePlayProgress(currentTime);
+                }
+            }
+        });
+        
+        // 页面隐藏时保存进度（移动端切换应用时）
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && dp && dp.video) {
+                var currentTime = dp.video.currentTime;
+                if (currentTime > 0) {
+                    savePlayProgress(currentTime);
+                }
+            }
+        });
     });
 
     // Toggle sidebar panel
